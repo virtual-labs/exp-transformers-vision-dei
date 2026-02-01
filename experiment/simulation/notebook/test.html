@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Data Test</title>
+</head>
+
+<body>
+    <h1>Testing Variant Data</h1>
+    <div id="output"></div>
+
+    <script src="./js/variants_data.js"></script>
+    <script>
+        const output = document.getElementById('output');
+
+        // Test getting variant data
+        const variant = getVariantData('small', '8', '0');
+
+        if (variant) {
+            output.innerHTML = `
+                <p><strong>Variant found:</strong> small_patch8_unfreeze0</p>
+                <p><strong>Number of cells:</strong> ${variant.cells.length}</p>
+                <p><strong>First cell title:</strong> ${variant.cells[0].title || 'No title'}</p>
+                <p><strong>First cell has code:</strong> ${variant.cells[0].code ? 'Yes' : 'No'}</p>
+                <p><strong>First cell has output:</strong> ${variant.cells[0].output_text ? 'Yes' : 'No'}</p>
+                <p><strong>First cell has images:</strong> ${variant.cells[0].has_image ? 'Yes' : 'No'}</p>
+                
+                <h2>First 5 Cell Titles:</h2>
+                <ul>
+                ${variant.cells.slice(0, 5).map((cell, i) => `
+                    <li>Cell ${i + 1}: ${cell.title || 'No title'} 
+                        (Output: ${cell.output_text ? 'Yes' : 'No'}, Images: ${cell.has_image ? cell.images.length : 0})
+                    </li>
+                `).join('')}
+                </ul>
+            `;
+        } else {
+            output.innerHTML = '<p style="color: red;">Error: Variant not found!</p>';
+        }
+    </script>
+</body>
+
+</html>

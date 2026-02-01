@@ -1,39 +1,102 @@
-{
-  "version": 2.0,
-  "questions": [
-    {
-      "question": "This is a Sample Question 1?",
-      "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
-      },
-      "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
-      },
-      "correctAnswer": "a",
-      "difficulty": "beginner"
+[
+  {
+    "question": "Why are pretrained weights commonly used when training Vision Transformers on small datasets?",
+    "answers": {
+      "a": "To reduce the number of classes",
+      "b": "To improve convergence and performance",
+      "c": "To eliminate the need for fine-tuning",
+      "d": "To remove positional embeddings"
     },
-    {
-      "question": "This is a Sample Question 2?",
-      "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
-      },
-      "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
-      },
-      "correctAnswer": "c",
-      "difficulty": "beginner"
-    }
-  ]
-}
+    "correctAnswer": "b"
+  },
+  {
+    "question": "What information do self-attention maps provide in Vision Transformers?",
+    "answers": {
+      "a": "Pixel intensity values",
+      "b": "Importance of image patches during prediction",
+      "c": "Training loss values",
+      "d": "Class labels"
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "Compared to CNNs, Vision Transformers primarily differ by using:",
+    "answers": {
+      "a": "Larger kernels",
+      "b": "Pooling layers",
+      "c": "Self-attention instead of convolution",
+      "d": "Fewer parameters"
+    },
+    "correctAnswer": "c"
+  },
+  {
+    "question": "Why is patch size an important hyperparameter in Vision Transformers?",
+    "answers": {
+      "a": "It controls the learning rate",
+      "b": "It determines the number of tokens processed",
+      "c": "It defines the loss function",
+      "d": "It replaces positional embeddings"
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "What is a key advantage of visualizing attention maps in ViTs?",
+    "answers": {
+      "a": "Faster training",
+      "b": "Improved accuracy",
+      "c": "Better interpretability of model decisions",
+      "d": "Reduced model size"
+    },
+    "correctAnswer": "c"
+  },
+  {
+    "question": "Why are early layers of a pretrained Vision Transformer often frozen during fine-tuning?",
+    "answers": {
+      "a": "To increase the model size",
+      "b": "To preserve learned low-level visual representations",
+      "c": "To remove positional embeddings",
+      "d": "To reduce the number of output classes"
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "What is the effect of reducing patch size in a Vision Transformer?",
+    "answers": {
+      "a": "It decreases the number of tokens processed",
+      "b": "It increases the number of patch embeddings",
+      "c": "It removes the need for positional encoding",
+      "d": "It disables self-attention"
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "During evaluation, why is gradient computation disabled in the ViT code?",
+    "answers": {
+      "a": "To improve model accuracy",
+      "b": "To reduce memory usage and speed up inference",
+      "c": "To freeze the optimizer",
+      "d": "To apply data augmentation"
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "What insight is gained by visualizing self-attention maps in a Vision Transformer?",
+    "answers": {
+      "a": "The exact numerical value of loss",
+      "b": "Which image patches influence the model’s decision",
+      "c": "The learning rate used during training",
+      "d": "The number of parameters in the model"
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "Compared to CNN feature maps, attention maps in ViTs primarily show:",
+    "answers": {
+      "a": "Local edge activations",
+      "b": "Global relationships between image patches",
+      "c": "Pooling regions",
+      "d": "Pixel-level gradients"
+    },
+    "correctAnswer": "b"
+  }
+]

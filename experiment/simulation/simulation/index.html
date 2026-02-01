@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViT Explorer | Virtual Lab</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS (for structure) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1a1a1a',
+                        accent: '#3b82f6',
+                        subtle: '#f3f4f6'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+</head>
+
+<body class="bg-white text-gray-900 font-sans antialiased selection:bg-blue-100 selection:text-blue-900">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold text-lg">V
+                </div>
+                <span class="font-semibold text-lg tracking-tight">ViT Explorer</span>
+            </div>
+            <div class="flex gap-6 text-sm font-medium text-gray-500">
+                <button class="hover:text-black transition-colors active-tab" onclick="switchTab('simulation-1')">1.
+                    Patchify</button>
+                <button class="hover:text-black transition-colors" onclick="switchTab('simulation-2')">2.
+                    Attention</button>
+                <button class="hover:text-black transition-colors" onclick="switchTab('simulation-3')">3.
+                    Architecture</button>
+            </div>
+            <div class="flex gap-2">
+                <a href="../index.html"
+                    class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors font-medium">←
+                    Home</a>
+                <a href="../notebook/index.html"
+                    class="text-xs bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-full transition-colors font-medium">View
+                    Notebook →</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-20 max-w-7xl mx-auto px-6 min-h-screen">
+
+        <!-- Intro Header -->
+        <header class="mb-12 max-w-3xl">
+            <h1 class="text-4xl font-light mb-4 text-primary">Vision Transformer <span
+                    class="text-gray-400">Internals</span></h1>
+            <p class="text-lg text-gray-600 font-light leading-relaxed">
+                Interactive exploration of how Vision Transformers process images. Break down images into patches,
+                visualize embeddings, and understand self-attention mechanisms.
+            </p>
+        </header>
+
+        <!-- Simulation 1: Patchify -->
+        <section id="simulation-1" class="simulation-section block">
+            <div class="bg-subtle/50 rounded-2xl border border-gray-100 p-8 min-h-[600px] relative overflow-hidden">
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <h2 class="text-2xl font-medium mb-2">1. Patch Extraction & Embedding</h2>
+                        <p class="text-gray-500 max-w-xl">See how an image is split into fixed-size patches and
+                            flattened into vectors. This is the first step of the ViT pipeline.</p>
+                    </div>
+                </div>
+
+                <!-- Explainer Section (Moved Above) -->
+                <div class="mb-8 bg-blue-50/50 p-6 rounded-xl border border-blue-100/50">
+                    <h3 class="text-sm font-semibold text-blue-800 uppercase tracking-wide mb-2">Intuition: From Pixels
+                        to Vectors</h3>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        The Vision Transformer (ViT) treats images like text. By chopping the image into fixed-size
+                        <strong>patches</strong> (e.g., 4x4 pixels), we convert 2D data into a 1D sequence of "tokens".
+                        Each flattened patch becomes a vector that represents a small part of the image, essentially
+                        creating a "sentence" where each word is a visual patch.
+                    </p>
+                </div>
+
+                <!-- Interactive Controls -->
+                <div class="flex gap-2 mb-6 justify-center">
+                    <button class="utility-btn" id="btn-explode">Explode Layout</button>
+                    <button class="utility-btn" id="btn-flatten">Flatten Patches</button>
+                </div>
+
+                <!-- Visualization Area -->
+                <div class="flex justify-center items-center h-[400px]" id="sim1-canvas-container">
+                    <!-- Canvas will be injected here -->
+                    <div class="text-gray-400 italic">Canvas Area - Loading...</div>
+                </div>
+
+                <!-- Controls/Stats Footer -->
+                <div class="mt-8 grid grid-cols-3 gap-6 border-t border-gray-200 pt-6">
+                    <div>
+                        <span class="text-xs font-mono text-gray-400 uppercase tracking-wider">Image Size</span>
+                        <div class="text-xl font-mono">32 x 32</div>
+                    </div>
+                    <div>
+                        <span class="text-xs font-mono text-gray-400 uppercase tracking-wider">Patch Size</span>
+                        <div class="text-xl font-mono">4 x 4</div>
+                    </div>
+                    <div>
+                        <span class="text-xs font-mono text-gray-400 uppercase tracking-wider">Sequence Length</span>
+                        <div class="text-xl font-mono">64 Patches</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulation 2: Attention -->
+        <section id="simulation-2" class="simulation-section hidden">
+            <div class="bg-subtle/50 rounded-2xl border border-gray-100 p-8 min-h-[600px]">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-medium mb-2">2. Attention Maps</h2>
+                    <p class="text-gray-500 max-w-xl">Hover over patches to see what the model "looks at". Brighter
+                        colors indicate stronger attention weights.</p>
+                </div>
+
+                <!-- Explainer Section (Moved Above) -->
+                <div class="mb-8 bg-blue-50/50 p-6 rounded-xl border border-blue-100/50">
+                    <h3 class="text-sm font-semibold text-blue-800 uppercase tracking-wide mb-2">Intuition:
+                        Self-Attention Mechanism</h3>
+                    <p class="text-gray-700 text-sm leading-relaxed mb-6">
+                        <strong>Self-Attention</strong> simulates "looking around". When we process a specific patch
+                        (green outline), the model computes attention scores to determine which other parts of the image
+                        are relevant.
+                        In the heatmap below, <span class="text-red-500 font-medium">red areas</span> indicate where the
+                        model is focusing its attention relative to the selected patch. Early layers often focus on
+                        nearby edges, while deeper layers find semantic connections (e.g., a "dog ear" attending to a
+                        "dog nose").
+                    </p>
+
+                    <div class="border-t border-blue-200/50 my-4"></div>
+
+                    <h3 class="text-sm font-semibold text-blue-800 uppercase tracking-wide mb-2">Deep Dive: Analyzing
+                        "Heads" & "Layers"</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-700 leading-relaxed">
+                        <div>
+                            <strong class="text-blue-900">What is a "Head"?</strong>
+                            <p class="mt-1">
+                                An Attention Head is a specific <em>search strategy</em>.
+                                <br>• <strong>Head 0 (Local Context):</strong> Focuses on similar pixels nearby
+                                (texture).
+                                <br>• <strong>Head 1 (Global Similarity):</strong> Finds matching colors anywhere (e.g.,
+                                blue sky).
+                                <br>• <strong>Head 2 (Proximity):</strong> Looks at immediate neighbors only.
+                            </p>
+                        </div>
+                        <div>
+                            <strong class="text-blue-900">What is a "Layer"?</strong>
+                            <p class="mt-1">
+                                Layers represent the <em>level of abstraction</em>.
+                                <br>• <strong>Early Layers (0-1):</strong> Constrained to local features. Even global
+                                heads search locally.
+                                <br>• <strong>Deep Layers (3+):</strong> Constraints lifted. The model searches the full
+                                image for semantic connections (e.g., nose ↔ tail).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Controls -->
+                <!-- Interactive Controls -->
+                <div
+                    class="flex gap-8 items-center justify-center mb-6 bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <div class="flex flex-col w-48">
+                        <div class="flex justify-between mb-1">
+                            <label class="text-xs font-bold text-gray-500 uppercase">Layer Depth</label>
+                            <span id="layer-desc" class="text-xs font-medium text-blue-600">0: Very Local</span>
+                        </div>
+                        <input type="range" min="0" max="5" value="0" class="w-full accent-black cursor-pointer"
+                            id="layer-slider">
+                    </div>
+                    <div class="flex flex-col w-48">
+                        <div class="flex justify-between mb-1">
+                            <label class="text-xs font-bold text-gray-500 uppercase">Attention Head</label>
+                            <span id="head-desc" class="text-xs font-medium text-blue-600">0: Texture/Local</span>
+                        </div>
+                        <input type="range" min="0" max="3" value="0" class="w-full accent-black cursor-pointer"
+                            id="head-slider">
+                    </div>
+                </div>
+
+                <div class="flex gap-12 justify-center items-center h-[450px]">
+                    <div class="relative group cursor-crosshair" id="sim2-input-container">
+                        <!-- Input Image -->
+                        <div
+                            class="absolute inset-0 border-2 border-transparent group-hover:border-blue-400/30 transition-all">
+                        </div>
+                    </div>
+
+                    <div class="w-12 text-center text-gray-300">
+                        <svg class="w-8 h-8 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </div>
+
+                    <div class="relative" id="sim2-heatmap-container">
+                        <!-- Attention Heatmap -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Simulation 3: Architecture -->
+        <section id="simulation-3" class="simulation-section hidden">
+            <div class="bg-subtle/50 rounded-2xl border border-gray-100 p-8 min-h-[600px]">
+                <div class="mb-8">
+                    <h2 class="text-2xl font-medium mb-2">3. Transformer Encoder</h2>
+                    <p class="text-gray-500">Trace the path of the patch embeddings through a Transformer Block.</p>
+                </div>
+
+                <!-- Explainer Section (Moved Above) -->
+                <div class="mb-8 bg-blue-50/50 p-6 rounded-xl border border-blue-100/50">
+                    <h3 class="text-sm font-semibold text-blue-800 uppercase tracking-wide mb-2">Intuition: The
+                        Transformer Block</h3>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        The <strong>Transformer Encoder</strong> is the brain of the network. The tokenized patches flow
+                        through layers of <em>Multi-Head Attention</em> (to mix information globally) and <em>MLP</em>
+                        (to process features locally).
+                        <br><br>
+                        Ultimately, a special "classification token" (or the average of all features) is used by the
+                        final <strong>MLP Head</strong> to determine the probability of each class.
+                    </p>
+                </div>
+
+                <div class="flex flex-col items-center justify-center space-y-4" id="sim3-flow-container">
+                    <!-- Flow Diagram nodes will be generated here -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-100 py-12 mt-12 bg-gray-50/50">
+        <div class="max-w-7xl mx-auto px-6 text-center text-gray-500 text-sm">
+            <p>Built for <strong>DEI DL Virtual Labs</strong> - ViT Experiment</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

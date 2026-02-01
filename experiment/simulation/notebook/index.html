@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vision Transformer (ViT) on CIFAR-10 - All Variants</title>
+	<link rel="stylesheet" href="./css/main.css">
+	<!-- Chart.js for visualizations -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+	<div class="simulation-container">
+		<!-- Step Indicator Sidebar -->
+		<aside class="step-sidebar">
+			<div class="step-sidebar-header">
+				<h3>Experiment Steps</h3>
+			</div>
+
+			<div class="step-list" id="stepList">
+				<!-- Steps will be dynamically generated -->
+			</div>
+
+			<!-- Control Buttons at Bottom -->
+			<div class="sidebar-footer">
+				<button class="reset-btn" id="resetBtn">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+						<path
+							d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+					</svg>
+					Reset
+				</button>
+				<a href="./cnn-experiment.pdf" download="cnn-experiment.pdf" class="download-pdf-btn">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+						<path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+					</svg>
+					Download Experiment
+				</a>
+			</div>
+		</aside>
+
+		<!-- Main Notebook Area -->
+		<main class="notebook-area">
+			<div class="notebook-header">
+				<h1>Vision Transformer (ViT) on CIFAR-10</h1>
+				<div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+					<a href="../index.html"
+						style="display: inline-block; padding: 0.5rem 1rem; background: #f3f4f6; color: #1f2937; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: all 0.2s;">
+						← Home
+					</a>
+					<a href="../simulation/index.html"
+						style="display: inline-block; padding: 0.5rem 1rem; background: #3b82f6; color: white; border-radius: 6px; text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: all 0.2s;">
+						View Simulations →
+					</a>
+				</div>
+			</div>
+
+			<!-- Variant Selector with Separate Dropdowns -->
+			<div class="variant-selector">
+				<div class="selector-label">Configuration:</div>
+				<div class="selector-controls">
+					<div class="param-group">
+						<label for="modelSelect">Model:</label>
+						<select id="modelSelect" class="param-dropdown">
+							<option value="small">ViT-Small</option>
+							<option value="tiny">ViT-Tiny</option>
+						</select>
+					</div>
+					<div class="param-group">
+						<label for="patchSelect">Patch Size:</label>
+						<select id="patchSelect" class="param-dropdown">
+							<option value="8">8×8</option>
+							<option value="16">16×16</option>
+						</select>
+					</div>
+					<div class="param-group">
+						<label for="unfreezeSelect">Unfreeze Blocks:</label>
+						<select id="unfreezeSelect" class="param-dropdown">
+							<option value="0">0 (All Frozen)</option>
+							<option value="6">6 (Half)</option>
+							<option value="12">12 (All)</option>
+						</select>
+					</div>
+				</div>
+			</div>
+
+			<!-- Cells Container -->
+			<div id="cellsContainer">
+				<div class="loading-message">Loading cells...</div>
+			</div>
+
+			<!-- Completion message -->
+			<div class="completion-message hidden" id="completionMessage">
+				<div class="completion-icon">
+					<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+						stroke-linecap="round" stroke-linejoin="round">
+						<polyline points="20 6 9 17 4 12"></polyline>
+					</svg>
+				</div>
+				<div class="completion-text">
+					<h3>Experiment Completed!</h3>
+					<p>You have successfully explored the Vision Transformer training process. Try different
+						configurations using the selectors above!</p>
+				</div>
+			</div>
+
+		</main>
+
+		<!-- Footer -->
+		<footer
+			style="border-top: 1px solid #e5e5e5; padding: 1.5rem; text-align: center; color: #666; font-size: 0.875rem; margin-top: 2rem;">
+			<p>Built for <strong style="color: #1a1a1a;">DEI DL Virtual Labs</strong> - ViT Experiment</p>
+		</footer>
+	</div>
+
+	<!-- Scripts -->
+	<script src="./js/variants_data.js"></script>
+	<script src="./js/variant_loader.js"></script>
+</body>
+
+</html>
