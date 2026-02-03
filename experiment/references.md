@@ -1,4 +1,4 @@
-# References
+### References
 
 1. A. Dosovitskiy et al., "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale," ICLR, 2021.
 2. CIFAR-10 dataset, Kaggle. Available at: [https://www.kaggle.com/datasets/ayush1220/cifar10](https://www.kaggle.com/datasets/ayush1220/cifar10)

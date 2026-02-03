@@ -118,9 +118,14 @@ function createCellElement(cell, stepNum) {
     // Cell header
     const header = document.createElement('div');
     header.className = 'cell-header';
+
+    // Check if button should be disabled initially
+    const isEnabled = stepNum === 1; // Only first step enabled initially
+    const disabledAttr = isEnabled ? '' : 'disabled';
+
     header.innerHTML = `
         <span class="cell-label">${title}</span>
-        <button class="run-btn" onclick="runCell(${stepNum})">
+        <button class="run-btn" data-step="${stepNum}" onclick="runCell(${stepNum})" ${disabledAttr}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8 5v14l11-7z" />
             </svg>
@@ -217,6 +222,8 @@ function runCell(step, scrollToOutput = false) {
             return;
         }
 
+        const runBtn = cell.querySelector('.run-btn');
+
         // Check if previous cell is completed (sequential execution)
         if (step > 1 && !completedSteps.has(step - 1)) {
             resolve(false);
@@ -230,7 +237,7 @@ function runCell(step, scrollToOutput = false) {
         }
 
         // Scroll to the cell being executed
-        cell.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        cell.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
         // Also scroll the sidebar step into view
         const stepItem = document.querySelector(`.step-item[data-step="${step}"]`);
@@ -241,6 +248,18 @@ function runCell(step, scrollToOutput = false) {
 
         // Mark as running
         cell.classList.add('running');
+
+        // Update Button State to Running
+        if (runBtn) {
+            runBtn.disabled = true;
+            runBtn.classList.add('running');
+            runBtn.innerHTML = `
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite">
+                    <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+                </svg>
+                Running...
+            `;
+        }
 
         // Wait 1 second at the code cell before showing output
         setTimeout(() => {
@@ -254,6 +273,23 @@ function runCell(step, scrollToOutput = false) {
             }
 
             completedSteps.add(step);
+
+            // Update Button State to Done
+            if (runBtn) {
+                runBtn.classList.remove('running');
+                runBtn.classList.add('completed'); // Optional: for styling
+                runBtn.innerHTML = `
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    Done
+                `;
+                // Keep disabled
+                runBtn.disabled = true;
+            }
+
+            // Update other buttons (enable next step)
+            updateRunButtonStates();
 
             // Show output immediately
             const output = cell.querySelector('.cell-output');
@@ -282,6 +318,7 @@ function runCell(step, scrollToOutput = false) {
         }, 1000); // 1 second at code cell
     });
 }
+
 
 function runAllCells() {
     if (!currentVariant) return;
@@ -350,6 +387,21 @@ function resetExperiment() {
         if (output) {
             output.classList.add('hidden');
         }
+
+        // Reset button state
+        const runBtn = cell.querySelector('.run-btn');
+        if (runBtn) {
+            runBtn.classList.remove('running', 'completed');
+            runBtn.innerHTML = `
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8 5v14l11-7z" />
+                </svg>
+                Run
+            `;
+            // Re-evaluate disabled state
+            const step = parseInt(cell.dataset.step);
+            runBtn.disabled = step !== 1;
+        }
     });
 
     document.querySelectorAll('.step-item').forEach(item => {
@@ -395,6 +447,30 @@ function updateActiveStepOnScroll() {
         if (scrollPos >= cellTop && scrollPos < cellBottom) {
             const step = parseInt(cell.dataset.step);
             setActiveStep(step);
+        }
+    });
+}
+
+function updateRunButtonStates() {
+    const cells = document.querySelectorAll('.notebook-cell');
+    if (!cells.length) return;
+
+    cells.forEach(cell => {
+        const step = parseInt(cell.dataset.step);
+        const btn = cell.querySelector('.run-btn');
+        if (!btn) return;
+
+        // If completed or running, keep disabled (state handled in runCell)
+        if (completedSteps.has(step) || cell.classList.contains('running')) {
+            btn.disabled = true;
+            return;
+        }
+
+        // If previous step completed or it's the first step, enable
+        if (step === 1 || completedSteps.has(step - 1)) {
+            btn.disabled = false;
+        } else {
+            btn.disabled = true;
         }
     });
 }
