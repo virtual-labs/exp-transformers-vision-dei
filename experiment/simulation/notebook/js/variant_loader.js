@@ -8,6 +8,7 @@ let completedSteps = new Set();
 document.addEventListener('DOMContentLoaded', function () {
     setupEventListeners();
     loadDefaultVariant();
+    updateStatusUI('Ready', 0, 0);
 });
 
 function setupEventListeners() {
@@ -18,6 +19,12 @@ function setupEventListeners() {
 
     // Reset button
     document.getElementById('resetBtn').addEventListener('click', resetExperiment);
+
+    // Run All button
+    const runAllBtn = document.getElementById('runAllBtn');
+    if (runAllBtn) {
+        runAllBtn.addEventListener('click', runAllCells);
+    }
 }
 
 function loadDefaultVariant() {
@@ -261,6 +268,11 @@ function runCell(step, scrollToOutput = false) {
             `;
         }
 
+        // Update Status
+        if (currentVariant) {
+            updateStatusUI(`Running Cell ${step}...`, completedSteps.size, currentVariant.cells.length);
+        }
+
         // Wait 1 second at the code cell before showing output
         setTimeout(() => {
             // Mark as completed
@@ -291,6 +303,11 @@ function runCell(step, scrollToOutput = false) {
             // Update other buttons (enable next step)
             updateRunButtonStates();
 
+            // Update Status
+            if (currentVariant) {
+                updateStatusUI(`Completed Cell ${step}`, completedSteps.size, currentVariant.cells.length);
+            }
+
             // Show output immediately
             const output = cell.querySelector('.cell-output');
             if (output) {
@@ -314,6 +331,7 @@ function runCell(step, scrollToOutput = false) {
             // Check if all steps completed
             if (currentVariant && completedSteps.size === currentVariant.cells.length) {
                 showCompletionMessage();
+                updateStatusUI('Experiment Completed', completedSteps.size, currentVariant.cells.length);
             }
         }, 1000); // 1 second at code cell
     });
@@ -336,6 +354,7 @@ function runAllCells() {
         if (!success) {
             // Sequential error occurred, stop execution
             console.log(`Stopped at cell ${step}: previous cell not completed`);
+            updateStatusUI(`Stopped at Cell ${step}`, completedSteps.size, currentVariant.cells.length);
             return;
         }
 
@@ -420,6 +439,13 @@ function resetExperiment() {
         message.classList.add('hidden');
     }
 
+    // Reset status UI
+    if (currentVariant) {
+        updateStatusUI('Ready', 0, currentVariant.cells.length);
+    } else {
+        updateStatusUI('Ready', 0, 0);
+    }
+
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -466,11 +492,23 @@ function updateRunButtonStates() {
             return;
         }
 
-        // If previous step completed or it's the first step, enable
         if (step === 1 || completedSteps.has(step - 1)) {
             btn.disabled = false;
         } else {
             btn.disabled = true;
         }
     });
+}
+
+function updateStatusUI(status, completed, total) {
+    const statusText = document.getElementById('statusText');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+
+    if (statusText) statusText.textContent = status;
+    if (progressText) progressText.textContent = `${completed}/${total}`;
+    if (progressBar) {
+        const percent = total > 0 ? (completed / total) * 100 : 0;
+        progressBar.style.width = `${percent}%`;
+    }
 }

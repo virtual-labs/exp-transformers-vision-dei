@@ -94,7 +94,7 @@ body {
     top: 0;
     bottom: 0;
     z-index: 100;
-    overflow-y: auto;
+    /* overflow-y: auto; Removed to allow internal scrolling */
     box-shadow: var(--shadow-sm);
 }
 
@@ -102,6 +102,8 @@ body {
     padding: var(--spacing-lg);
     border-bottom: 1px solid var(--border-color);
     background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+    flex-shrink: 0;
+    /* Prevent shrinking */
 }
 
 .step-sidebar-header h3 {
@@ -114,6 +116,8 @@ body {
 .step-list {
     flex: 1;
     padding: var(--spacing-md);
+    overflow-y: auto;
+    /* Enable scrolling for list only */
 }
 
 .step-item {
@@ -227,8 +231,8 @@ body {
     color: var(--step-completed);
 }
 
-/* Sidebar Footer */
-.sidebar-footer {
+/* Sidebar Controls (Docked to bottom) */
+.sidebar-controls {
     padding: var(--spacing-md);
     border-top: 1px solid var(--border-color);
     background: var(--bg-primary);
@@ -236,10 +240,57 @@ body {
     flex-direction: column;
     gap: var(--spacing-sm);
     margin-top: auto;
+    /* Pushes to bottom */
 }
 
-.sidebar-footer .reset-btn,
-.sidebar-footer .download-pdf-btn {
+/* Status Panel */
+.status-panel {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+}
+
+.status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xs);
+    font-size: 0.8rem;
+}
+
+.status-text {
+    font-weight: 600;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 75%;
+}
+
+.progress-text {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.progress-bar-container {
+    height: 6px;
+    background: var(--bg-tertiary);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--accent-green);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.sidebar-controls .run-all-btn,
+.sidebar-controls .reset-btn,
+.sidebar-controls .download-pdf-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -255,25 +306,36 @@ body {
     width: 100%;
 }
 
-.sidebar-footer .reset-btn {
+.sidebar-controls .run-all-btn {
+    background: linear-gradient(135deg, #198754 0%, #157347 100%);
+    color: #ffffff;
+    box-shadow: var(--shadow-sm);
+}
+
+.sidebar-controls .run-all-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.35);
+}
+
+.sidebar-controls .reset-btn {
     background: var(--bg-tertiary);
     color: var(--text-secondary);
     border: 1px solid var(--border-color);
 }
 
-.sidebar-footer .reset-btn:hover {
+.sidebar-controls .reset-btn:hover {
     background: var(--bg-secondary);
     color: var(--text-primary);
     border-color: var(--text-muted);
 }
 
-.sidebar-footer .download-pdf-btn {
+.sidebar-controls .download-pdf-btn {
     background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
     color: #ffffff;
     box-shadow: var(--shadow-sm);
 }
 
-.sidebar-footer .download-pdf-btn:hover {
+.sidebar-controls .download-pdf-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(13, 110, 253, 0.35);
 }
