@@ -16,7 +16,6 @@ Vision Transformers represent a paradigm shift in computer vision by replacing c
 * **Example:** 224×224 image with 16×16 patches → 14×14 = 196 patches.
 
 ![Image Patching](images/image29.png)
-*Figure 1: Image Patching*
 
 **II. Patch Embedding**
 
@@ -34,16 +33,13 @@ Transformers don't naturally know where a token comes from (they treat the input
 * **Learnable Positional Embeddings:** ViT uses learnable positional vectors to capture local and global spatial relationships adapting better than fixed encodings across image resolutions.
 
 ![Positional Encoding](images/image1.png)
-*Figure 2: Positional Encoding*
 
 **Some more which are used in later ViT variants:**
 
 * **Fixed (sinusoidal) absolute positional embeddings:** Same idea as the original Transformer sine/cosine encoding, but applied to the patch grid positions. No extra learned parameters.
 
 ![Fixed Positional Embeddings 1](images/image23.png)
-*Figure 3: Fixed Positional Embeddings 1*
 ![Fixed Positional Embeddings 2](images/image28.png)
-*Figure 4: Fixed Positional Embeddings 2*
 
 **Equations:**
 PE(pos, 2i) = sin(pos / 10000^(2i/d_model))
@@ -80,7 +76,6 @@ The core building block of a Vision Transformer is the self-attention mechanism,
 Multi-head self-attention further enhances this capability by allowing the model to focus on different aspects of the image simultaneously.
 
 ![Self Attention](images/image27.png)
-*Figure 5: Self Attention*
 
 **Computation:**
 
@@ -110,9 +105,7 @@ A single attention head captures only one type of relationship—perhaps syntact
 MultiHead(Q, K, V) = Concat(head_1, ..., head_h)W^O
 
 ![Multi Head Attention](images/image24.png)
-*Figure 6: Multi Head Attention*
 ![MHA Architecture](images/image22.png)
-*Figure 7: MHA Architecture*
 
 **Multi-headed-attention architecture:**
 * **Input tokens → Linear projections:** Create Q, K, V from embeddings using learned linear layers.
@@ -149,7 +142,6 @@ MultiHead(Q, K, V) = Concat(head_1, ..., head_h)W^O
 * **Decoder:** The decoder is also composed of a stack of N = 6 identical layers. In addition to the two sub-layers in each encoder layer, the decoder inserts a third sub-layer, which performs multi-head attention over the output of the encoder stack. Similar to the encoder, we employ residual connections around each of the sub-layers, followed by layer normalization. We also modify the self-attention sub-layer in the decoder stack to prevent positions from attending to subsequent positions.
 
 ![Model Architecture](images/image25.png)
-*Figure 8: Model Architecture*
 
 **IX. Transformer Encoder Block (ViT)**
 
@@ -158,7 +150,6 @@ Residual connections stabilize training, while the MLP refines learned represent
 MSA → Add + LayerNorm → MLP → Add + LayerNorm
 
 ![Transformer Encoder](images/image17.png)
-*Figure 9: Transformer Encoder*
 
 **Working of Encoder:**
 1. **Input (Embedded patches):** Split the image into small patches and turn each patch into a vector (a token).
@@ -172,7 +163,6 @@ MSA → Add + LayerNorm → MLP → Add + LayerNorm
 5. **Output:** Better patch/token features (used for classification or other tasks).
 
 ![Enc Dec](images/image26.png)
-*Figure 10: Enc Dec*
 
 **X. Residual Connections and Layer Normalization**
 
