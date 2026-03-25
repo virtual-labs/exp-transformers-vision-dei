@@ -42,8 +42,10 @@ Transformers don't naturally know where a token comes from (they treat the input
 ![Fixed Positional Embeddings 2](images/image28.png)
 
 **Equations:**
-PE(pos, 2i) = sin(pos / 10000^(2i/d_model))
-PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))
+
+$$\text{PE}(\text{pos},\, 2i) = \sin\!\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)$$
+
+$$\text{PE}(\text{pos},\, 2i+1) = \cos\!\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)$$
 
 **Meaning of symbols:**
 * **pos** → token position in the sequence (0, 1, 2, …)
@@ -75,18 +77,20 @@ The core building block of a Vision Transformer is the self-attention mechanism,
 
 Multi-head self-attention further enhances this capability by allowing the model to focus on different aspects of the image simultaneously.
 
-![Self Attention](images/image27.png)
+![Self-Attention Mechanism — showing Query, Key, and Value projections and the scaled dot-product attention computation](images/image27.png)
+*Figure: Self-Attention Mechanism (Query–Key–Value)*
 
 **Computation:**
 
-Attention(Q, K, V) = softmax(QK^T / sqrt(d_k)) * V
+$$\text{Attention}(Q, K, V) = \text{softmax}\!\left(\frac{QK^T}{\sqrt{d_k}}\right) V$$
 
-* **Query (Q)** = what this token is asking for
-* **Key (K)** = what this token offers as information
-* **Value (V)** = the actual content or meaning
+* **Query ($Q$)** = what this token is asking for
+* **Key ($K$)** = what this token offers as information
+* **Value ($V$)** = the actual content or meaning
 
-The attention score between tokens i and j is computed as:
-Score(i,j) = Q_i . K_j
+The attention score between tokens $i$ and $j$ is computed as:
+
+$$\text{Score}(i,j) = Q_i \cdot K_j$$
 
 These scores are normalised with a softmax to produce attention weights.
 
@@ -102,7 +106,7 @@ Instead of a single attention operation, Vision Transformers use Multi-Head Atte
 
 A single attention head captures only one type of relationship—perhaps syntactic, positional, or semantic. To let the model learn multiple perspectives simultaneously, the Transformer employs multi-head attention (MHA).
 
-MultiHead(Q, K, V) = Concat(head_1, ..., head_h)W^O
+$$\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h)\, W^O$$
 
 ![Multi Head Attention](images/image24.png)
 ![MHA Architecture](images/image22.png)

@@ -1,6 +1,6 @@
 [
   {
-    "question": "Why are pretrained weights commonly used when training Vision Transformers on small datasets?",
+    "question": "1. Why are pretrained weights commonly used when training Vision Transformers on small datasets?",
     "answers": {
       "a": "To reduce the number of classes",
       "b": "To improve convergence and performance",
@@ -10,7 +10,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "What information do self-attention maps provide in Vision Transformers?",
+    "question": "2. What information do self-attention maps provide in Vision Transformers?",
     "answers": {
       "a": "Pixel intensity values",
       "b": "Importance of image patches during prediction",
@@ -20,7 +20,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "Compared to CNNs, Vision Transformers primarily differ by using:",
+    "question": "3. Compared to CNNs, Vision Transformers primarily differ by using:",
     "answers": {
       "a": "Larger kernels",
       "b": "Pooling layers",
@@ -30,7 +30,7 @@
     "correctAnswer": "c"
   },
   {
-    "question": "Why is patch size an important hyperparameter in Vision Transformers?",
+    "question": "4. Why is patch size an important hyperparameter in Vision Transformers?",
     "answers": {
       "a": "It controls the learning rate",
       "b": "It determines the number of tokens processed",
@@ -40,7 +40,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "What is a key advantage of visualizing attention maps in ViTs?",
+    "question": "5. What is a key advantage of visualizing attention maps in ViTs?",
     "answers": {
       "a": "Faster training",
       "b": "Improved accuracy",
@@ -50,7 +50,7 @@
     "correctAnswer": "c"
   },
   {
-    "question": "Why are early layers of a pretrained Vision Transformer often frozen during fine-tuning?",
+    "question": "6. Why are early layers of a pretrained Vision Transformer often frozen during fine-tuning?",
     "answers": {
       "a": "To increase the model size",
       "b": "To preserve learned low-level visual representations",
@@ -60,7 +60,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "What is the effect of reducing patch size in a Vision Transformer?",
+    "question": "7. What is the effect of reducing patch size in a Vision Transformer?",
     "answers": {
       "a": "It decreases the number of tokens processed",
       "b": "It increases the number of patch embeddings",
@@ -70,7 +70,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "During evaluation, why is gradient computation disabled in the ViT code?",
+    "question": "8. During evaluation, why is gradient computation disabled in the ViT code?",
     "answers": {
       "a": "To improve model accuracy",
       "b": "To reduce memory usage and speed up inference",
@@ -80,17 +80,17 @@
     "correctAnswer": "b"
   },
   {
-    "question": "What insight is gained by visualizing self-attention maps in a Vision Transformer?",
+    "question": "9. What insight is gained by visualizing self-attention maps in a Vision Transformer?",
     "answers": {
       "a": "The exact numerical value of loss",
-      "b": "Which image patches influence the model’s decision",
+      "b": "Which image patches influence the model\u2019s decision",
       "c": "The learning rate used during training",
       "d": "The number of parameters in the model"
     },
     "correctAnswer": "b"
   },
   {
-    "question": "Compared to CNN feature maps, attention maps in ViTs primarily show:",
+    "question": "10. Compared to CNN feature maps, attention maps in ViTs primarily show:",
     "answers": {
       "a": "Local edge activations",
       "b": "Global relationships between image patches",

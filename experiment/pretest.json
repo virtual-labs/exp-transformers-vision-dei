@@ -1,6 +1,6 @@
 [
   {
-    "question": "What is the key idea behind transformer architectures?",
+    "question": "1. What is the key idea behind transformer architectures?",
     "answers": {
       "a": "Convolution operations",
       "b": "Self-attention mechanisms",
@@ -10,7 +10,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "How does a Vision Transformer process an image?",
+    "question": "2. How does a Vision Transformer process an image?",
     "answers": {
       "a": "By directly applying convolutions",
       "b": "By flattening the entire image into one vector",
@@ -20,7 +20,7 @@
     "correctAnswer": "c"
   },
   {
-    "question": "Why are positional embeddings required in Vision Transformers?",
+    "question": "3. Why are positional embeddings required in Vision Transformers?",
     "answers": {
       "a": "To reduce model size",
       "b": "To encode spatial information of patches",
@@ -30,7 +30,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "What role does the CLS token play in a Vision Transformer?",
+    "question": "4. What role does the CLS token play in a Vision Transformer?",
     "answers": {
       "a": "It represents the background of the image",
       "b": "It stores the final image representation for classification",
@@ -40,7 +40,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "Which operation allows ViTs to model long-range dependencies?",
+    "question": "5. Which operation allows ViTs to model long-range dependencies?",
     "answers": {
       "a": "Pooling",
       "b": "Self-attention",
@@ -50,7 +50,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "In the attention equation Attention(Q,K,V) = softmax(QK^T / sqrt(d_k))V, What is the role of the softmax function?",
+    "question": "6. In the attention equation Attention(Q,K,V) = softmax(QK^T / sqrt(d_k))V, What is the role of the softmax function?",
     "answers": {
       "a": "Pooling",
       "b": "Self-attention",
@@ -60,7 +60,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "Why is the term sqrt(d_k) used in the denominator of the attention equation?",
+    "question": "7. Why is the term sqrt(d_k) used in the denominator of the attention equation?",
     "answers": {
       "a": "To increase numerical instability",
       "b": "To scale down large dot-product values",
@@ -70,7 +70,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "What does the Query–Key dot product QK^T represent in self-attention?",
+    "question": "8. What does the Query\u2013Key dot product QK^T represent in self-attention?",
     "answers": {
       "a": "The pixel intensity of image patches",
       "b": "The similarity between different patches",
@@ -80,7 +80,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "In Vision Transformers, why are images converted into a sequence of patches?",
+    "question": "9. In Vision Transformers, why are images converted into a sequence of patches?",
     "answers": {
       "a": "To apply convolution operations",
       "b": "To make images compatible with transformer architectures",
@@ -90,7 +90,7 @@
     "correctAnswer": "b"
   },
   {
-    "question": "Which statement best describes self-attention in Vision Transformers?",
+    "question": "10. Which statement best describes self-attention in Vision Transformers?",
     "answers": {
       "a": "Each patch attends only to its neighboring patches",
       "b": "Each patch attends to all other patches in the image",
