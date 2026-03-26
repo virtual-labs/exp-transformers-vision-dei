@@ -31,15 +31,15 @@ Common types of positional encoding used in ViT-model:
 
 * **Learnable Positional Embeddings**: ViT uses learnable positional vectors to capture local and global spatial relationships adapting better than fixed encodings across image resolutions.
 
-$$Z_0 = [x_{CLS}; z_1; z_2; \ldots; z_N] + E_{pos}$$
+$$Z_0 = [x_{cls}; z_1; z_2; \ldots; z_N] + E_{pos}$$
 
 * **Fixed (sinusoidal) absolute positional embeddings**
 Same idea as the original Transformer sine/cosine encoding, but applied to the patch grid positions.
 No extra learned parameters.
 
-$$\text{PE}(\text{pos}, 2i) = \sin\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)$$
+$$\text{pe}(\text{pos}, 2i) = \sin\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)$$
 
-$$\text{PE}(\text{pos}, 2i+1) = \cos\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)$$
+$$\text{pe}(\text{pos}, 2i+1) = \cos\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)$$
 
 Where:
 * pos = token position in the sequence (0, 1, 2, …)
@@ -59,20 +59,18 @@ The core building block of a Vision Transformer is the self-attention mechanism,
 
 **Computation:**
 
-$$Q = XW_Q, \quad K = XW_K, \quad V = XW_V$$
-
-$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+$$\text{attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V, \quad Q = XW_Q, \quad K = XW_K, \quad V = XW_V$$
 
 * Query (Q) = what this token is asking for
 * Key (K) = what this token offers as information
 * Value (V) = the actual content or meaning
 * The attention score between tokens i and j is computed as:
 
-$$\text{Score}(i,j) = \frac{Q_i K_j^T}{\sqrt{d_k}}$$
+$$\text{score}(i,j) = \frac{Q_i K_j^T}{\sqrt{d_k}}$$
 
 These scores are normalised with a softmax to produce a attention weights:
 
-$$\alpha_{ij} = \text{softmax}_j\left(\text{Score}(i,j)\right)$$
+$$\alpha_{ij} = \text{softmax}_j\left(\text{score}(i,j)\right)$$
 
 Where: i, j = 0,1,2,3……
 * $QK^T$ computes similarity between all pairs of tokens (dot product)
@@ -86,7 +84,7 @@ Where: i, j = 0,1,2,3……
 Instead of a single attention operation, Vision Transformers use Multi-Head Attention so the model can capture different relationships in parallel as shown in Fig 2.
 A single attention head captures only one type of relationship—perhaps syntactic, positional, or semantic. To let the model learn multiple perspectives simultaneously, the Transformer employs multi head attention (MHA).
 
-$$\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h) W_O$$
+$$\text{multihead}(Q, K, V) = \text{concat}(\text{head}_1, \ldots, \text{head}_h) W_O$$
 
 **Residual Connections and Layer Normalization**
 
@@ -102,7 +100,7 @@ Refer to the right side of Fig .2 , where:
 * These Q, K, and V representations are divided into h parallel attention heads, enabling the model to attend to information from multiple representation subspaces simultaneously.
 * Within each head, scaled dot-product attention is computed as:
 
-$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+$$\text{attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
 
 where d denotes the dimensionality of the key vectors.
 
@@ -134,11 +132,11 @@ Residual connections stabilize training, while the MLP refines learned represent
 
 Let Z denote the input token embeddings to a transformer encoder block. The intermediate representation after multi-head self-attention and residual normalization is computed as
 
-$$Z' = \text{LayerNorm}\left(Z + \text{MSA}(Z)\right)$$
+$$Z' = \text{layernorm}(Z + \text{msa}(Z))$$
 
 Subsequently, the output of the encoder block is obtained by applying a position-wise multilayer perceptron followed by another residual connection and Layer Normalization:
 
-$$Z_\text{out} = \text{LayerNorm}\left(Z' + \text{MLP}(Z')\right)$$
+$$Z_{\text{out}} = \text{layernorm}(Z' + \text{mlp}(Z'))$$
 
 Above mentioned equations together describe the standard transformer encoder structure, where residual connections preserve input information and Layer Normalization stabilizes training, while the MSA and MLP modules respectively model global dependencies and enhance feature representations.
 
