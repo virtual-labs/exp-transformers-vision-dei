@@ -30,6 +30,7 @@ Since transformer architectures lack inherent awareness of token ordering and tr
 Common types of positional encoding used in ViT-model:
 
 * **Learnable Positional Embeddings**: ViT uses learnable positional vectors to capture local and global spatial relationships adapting better than fixed encodings across image resolutions.
+$$z = \sum_{i=1}^{n} w_i x_i + b$$
 
 $$Z_0 = [x_{cls}; z_1; z_2; \ldots; z_N] + E_{pos}$$
 
