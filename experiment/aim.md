@@ -1,3 +1,3 @@
 ### Aim
 
-To understand the working principles of Vision Transformers (ViT) and to explore how self-attention mechanisms and patch-based representations can be applied to image classification tasks, using a pretrained Vision Transformer model on a subset of the CIFAR-10 dataset.
+To understand the core principles of Vision Transformers (ViT) by exploring self-attention mechanisms and patch-based image representations, and to apply a pretrained or lightly fine-tuned ViT model on a CIFAR-10 subset, with detailed visualization of patch embeddings and self-attention maps for selected images.
