@@ -154,7 +154,7 @@ The decoder decodes this intermediate representation step by step and generates 
 * Layer Normalization followed by an MLP refines each token independently.
 * A second residual connection produces enhanced token representations for downstream tasks.
 
-**X. Summary of Core Components**
+**IX. Summary of Core Components**
 
 | Component | Purpose | Key Insight |
 | :--- | :--- | :--- |
