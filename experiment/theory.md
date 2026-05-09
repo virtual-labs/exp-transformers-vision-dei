@@ -77,9 +77,9 @@ Where: i, j = 0,1,2,3……
 * $d_k = \frac{D}{h}$ the dimension per attention head
 * Divide by $\sqrt{d_k}$ for scaling to prevent large values causing softmax saturation
 * softmax normalizes scores into probabilities for attention weights
-* Multiply by V to get weighted sum of information from all tokens
+* Multiply by V to get weighted sum of information from all tokens V.
 
-**V. Multi-Headed Self-Attention**
+**Multi-Headed Self-Attention (merged 5th and 6th section)**
 
 Instead of a single attention operation, Vision Transformers use Multi-Head Attention so the model can capture different relationships in parallel as shown in Fig 2.
 A single attention head captures only one type of relationship—perhaps syntactic, positional, or semantic. To let the model learn multiple perspectives simultaneously, the Transformer employs multi head attention (MHA).
@@ -116,9 +116,9 @@ A learnable classification (CLS) token is prepended to the sequence of patch emb
 
 Vision Transformers typically require large datasets for effective training; therefore, pretrained models are often used and fine-tuned for smaller datasets such as CIFAR-10
 
-**VIII. Model Architecture**
+**VII. Model Architecture**
 
-**Encoder and Decoder Stacks:**
+**Encoder Stack:**
 
 **Encoder:** The encoder is composed of a stack of N = 6 as shown on the left side of Fig.3 identical layers. Each layer has two sub-layers. The first is a multi-head self-attention mechanism, and the second is a simple, position-wise fully connected feed-forward network. We employ a residual connection around each of the two sub-layers, followed by layer normalization . That is, the output of each sub-layer is LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sub-layer itself. To facilitate these residual connections, all sub-layers in the model, as well as the embedding layers, produce outputs of dimension model = 512.
 
@@ -126,7 +126,7 @@ Vision Transformers typically require large datasets for effective training; the
 
 ![Fig 3: The Transformer - model architecture. Figure adapted from Source:(Vaswani *et al.*, "Attention Is All You Need",(2017).)](images/image25.png)
 
-**IX. Transformer Encoder Block**
+**VIII. Transformer Encoder Block (removed Fig 4)**
 
 Residual connections stabilize training, while the MLP refines learned representations.
 
@@ -140,12 +140,10 @@ $$Z_{\text{out}} = \text{layernorm}(Z' + \text{mlp}(Z'))$$
 
 Above mentioned equations together describe the standard transformer encoder structure, where residual connections preserve input information and Layer Normalization stabilizes training, while the MSA and MLP modules respectively model global dependencies and enhance feature representations.
 
-The transformer has two parts, the decoder which is on the left side in Fig 4. and the encoder which is on the right.
+The transformer has two parts, the decoder which is on the right side in Fig 3. and the encoder which is on the left side of Fig 3.
 Imagine we are doing machine translation for now.
 The encoder takes the input data (sentence), and produces an intermediate representation of the input.
 The decoder decodes this intermediate representation step by step and generates the output.
-
-![Fig 4: Model overview. We split an image into fixed-size patches, linearly embed each of them, add position embeddings, and feed the resulting sequence of vectors to a standard Transformer encoder. In order to perform classification, we use the standard approach of adding an extra learnable "classification token" to the sequence. Source:(Vaswani et al, "An Image is worth 16x16 words" arXiv:2010.11929v2,(2017)).](images/image26.png)
 
 **Working of Encoder:**
 * Input (Embedded patches): Split the image into small patches and turn each patch into a vector (a token).
@@ -169,9 +167,9 @@ The decoder decodes this intermediate representation step by step and generates 
 | **Feed-Forward Network** | Applies nonlinear transformation per token. | Enhances representation depth. |
 | **Residual + LN** | Stabilizes training and gradients. | Ensures smooth optimization and deep stacking. |
 
-**XI. Use Cases of Vision Transformers:**
+**X. Use Cases of Vision Transformers:**
 
-* **Access to large-scale labeled datasets and robust compute infrastructure -** vision transformers are data-hungry and require significant training time and memory, especially in their vanilla form. With enough data and compute, they are capable of outperforming CNNs in many benchmarks.
+* **Image Segmentation:** Segmentation means dividing an image into meaningful regions such as roads, tumors, objects, backgrounds, or boundaries within an image. Transformer-based segmentation models are becoming state-of-the-art because they can understand both local details and global image context effectively.
 
 * **We need to capture long-range spatial relationships -** Unlike CNNs, which are local in their processing (remember the receptive field section), ViTs leverage self-attention to model relationships between all image patches, making them particularly useful for tasks where spatial context across the entire image matters.
 

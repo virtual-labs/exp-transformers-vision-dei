@@ -3,11 +3,17 @@
     "question": "1. What is the key idea behind transformer architectures?",
     "answers": {
       "a": "Convolution operations",
-      "b": "Self-attention mechanisms",
+      "b": "Kernel based Learning",
       "c": "Pooling layers",
-      "d": "Kernel-based learning"
+      "d": "Self-attention mechanism"
     },
-    "correctAnswer": "b"
+    "explanations": {
+      "a": "Incorrect because transformers do not rely on convolutions.",
+      "b": "Incorrect because kernel based learning is a different paradigm.",
+      "c": "Incorrect because pooling is a CNN-specific operation.",
+      "d": "Correct because transformers are built around self-attention."
+    },
+    "correctAnswer": "d"
   },
   {
     "question": "2. How does a Vision Transformer process an image?",
@@ -16,6 +22,12 @@
       "b": "By flattening the entire image into one vector",
       "c": "By splitting the image into fixed-size patches",
       "d": "By applying pooling operations"
+    },
+    "explanations": {
+      "a": "Incorrect because it does not use convolutions.",
+      "b": "Incorrect because it uses patches, not one single vector.",
+      "c": "Correct because it processes images as sequences of patches.",
+      "d": "Incorrect because pooling is not used."
     },
     "correctAnswer": "c"
   },
@@ -27,17 +39,29 @@
       "c": "To normalize patch values",
       "d": "To perform classification"
     },
+    "explanations": {
+      "a": "Incorrect because embeddings add parameters.",
+      "b": "Correct because positional embeddings remain essential to retain spatial info.",
+      "c": "Incorrect because normalization is done separately.",
+      "d": "Incorrect because classification uses the CLS token."
+    },
     "correctAnswer": "b"
   },
   {
     "question": "4. What role does the CLS token play in a Vision Transformer?",
     "answers": {
-      "a": "It represents the background of the image",
-      "b": "It stores the final image representation for classification",
+      "a": "It stores the final image representation for classification",
+      "b": "It represents the background of the image",
       "c": "It replaces patch embeddings",
       "d": "It performs pooling"
     },
-    "correctAnswer": "b"
+    "explanations": {
+      "a": "Correct because it is used for prediction.",
+      "b": "Incorrect because it aggregates global information, not just background.",
+      "c": "Incorrect because patches are still processed.",
+      "d": "Incorrect because it is not a pooling operation."
+    },
+    "correctAnswer": "a"
   },
   {
     "question": "5. Which operation allows ViTs to model long-range dependencies?",
@@ -47,15 +71,27 @@
       "c": "Dropout",
       "d": "Normalization"
     },
+    "explanations": {
+      "a": "Incorrect because pooling focuses on local neighborhoods.",
+      "b": "Correct because self-attention connects all patches globally.",
+      "c": "Incorrect because dropout is for regularization.",
+      "d": "Incorrect because normalization stabilizes training."
+    },
     "correctAnswer": "b"
   },
   {
     "question": "6. In the attention equation Attention(Q,K,V) = softmax(QK^T / sqrt(d_k))V, What is the role of the softmax function?",
     "answers": {
-      "a": "Pooling",
-      "b": "Self-attention",
-      "c": "Dropout",
-      "d": "Normalization"
+      "a": "Increasing the dimensionality of vectors",
+      "b": "Converting attention scores into probabilities",
+      "c": "Removing unnecessary neurons during training",
+      "d": "Initializing model parameters"
+    },
+    "explanations": {
+      "a": "Incorrect because softmax does not increase dimensions.",
+      "b": "Correct because softmax assigns normalized importance weights to different tokens.",
+      "c": "Incorrect because that is the role of dropout.",
+      "d": "Incorrect because parameter initialization is done before training begins."
     },
     "correctAnswer": "b"
   },
@@ -63,21 +99,33 @@
     "question": "7. Why is the term sqrt(d_k) used in the denominator of the attention equation?",
     "answers": {
       "a": "To increase numerical instability",
-      "b": "To scale down large dot-product values",
-      "c": "To reduce the number of parameters",
+      "b": "To reduce the number of parameters",
+      "c": "To scale down large dot-product values",
       "d": "To perform normalization"
     },
-    "correctAnswer": "b"
+    "explanations": {
+      "a": "Incorrect because the purpose is to improve stability, not reduce it.",
+      "b": "Incorrect because scaling does not change parameter count.",
+      "c": "Correct because scaling prevents extremely large values before softmax.",
+      "d": "Incorrect because normalization is performed separately."
+    },
+    "correctAnswer": "c"
   },
   {
-    "question": "8. What does the Query\u2013Key dot product QK^T represent in self-attention?",
+    "question": "8. What does the Query-Key dot product QK^T represent in self-attention?",
     "answers": {
-      "a": "The pixel intensity of image patches",
-      "b": "The similarity between different patches",
+      "a": "The similarity between different patches",
+      "b": "The pixel intensity of image patches",
       "c": "The classification score",
       "d": "The loss value"
     },
-    "correctAnswer": "b"
+    "explanations": {
+      "a": "Correct because dot products measure how related two patches are.",
+      "b": "Incorrect because attention operates on embeddings, not raw pixels.",
+      "c": "Incorrect because classification happens after the transformer encoder.",
+      "d": "Incorrect because loss is computed separately."
+    },
+    "correctAnswer": "a"
   },
   {
     "question": "9. In Vision Transformers, why are images converted into a sequence of patches?",
@@ -87,16 +135,28 @@
       "c": "To reduce image resolution",
       "d": "To perform pooling"
     },
+    "explanations": {
+      "a": "Incorrect because ViTs do not use convolutions.",
+      "b": "Correct because transformers require sequential inputs.",
+      "c": "Incorrect because resolution is preserved.",
+      "d": "Incorrect because pooling is not used."
+    },
     "correctAnswer": "b"
   },
   {
     "question": "10. Which statement best describes self-attention in Vision Transformers?",
     "answers": {
       "a": "Each patch attends only to its neighboring patches",
-      "b": "Each patch attends to all other patches in the image",
+      "b": "Self-attention replaces the need for labels",
       "c": "Attention is applied only in the final layer",
-      "d": "Self-attention replaces the need for labels"
+      "d": "Each patch attends to all other patches in the image"
     },
-    "correctAnswer": "b"
+    "explanations": {
+      "a": "Incorrect because self-attention considers all patches globally.",
+      "b": "Incorrect because supervision is still required.",
+      "c": "Incorrect because attention is applied in every transformer block.",
+      "d": "Correct because self-attention captures global relationships."
+    },
+    "correctAnswer": "d"
   }
 ]
