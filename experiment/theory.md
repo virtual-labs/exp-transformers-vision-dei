@@ -79,7 +79,7 @@ Where: i, j = 0,1,2,3……
 * softmax normalizes scores into probabilities for attention weights
 * Multiply by V to get weighted sum of information from all tokens V.
 
-**Multi-Headed Self-Attention (merged 5th and 6th section)**
+**V. Multi-Headed Self-Attention**
 
 Instead of a single attention operation, Vision Transformers use Multi-Head Attention so the model can capture different relationships in parallel as shown in Fig 2.
 A single attention head captures only one type of relationship—perhaps syntactic, positional, or semantic. To let the model learn multiple perspectives simultaneously, the Transformer employs multi head attention (MHA).
@@ -93,7 +93,7 @@ Ensures stable training in deep networks by preserving information and normalizi
 * **Residual (Skip) Connections:** Residual connections bypass transformation blocks to preserve earlier layer information, preventing degradation in deep networks. They enable the model to learn incremental refinements, improving convergence and stability in deep ViTs.
 * **Layer Normalization:** LayerNorm normalizes features across the input, stabilizing training and reducing internal covariate shift. Pre-LN ensures well-conditioned gradients and consistent scaling across tokens in deep Transformers.
 
-**VI. Multi-headed-attention architecture:**
+* **Multi-headed-attention architecture:**
 
 Refer to the right side of Fig .2 , where:
 * The input tokens are first projected into three separate vectors—Query (Q), Key (K), and Value (V)—using learned linear transformations.
@@ -110,7 +110,7 @@ where d denotes the dimensionality of the key vectors.
 
 ![Fig 2: (left) Scaled Dot-Product Attention. (right) Multi-Head Attention consists of several attention layers running in parallel. Source:(Vaswani *et al.*, "Attention Is All You Need"(2017)).](images/image22.png)
 
-**VII. Classification Token**
+**VI. Classification Token**
 
 A learnable classification (CLS) token is prepended to the sequence of patch embeddings to aggregate global contextual information across the input image. After propagation through the transformer encoder layers, the final CLS token representation is utilized for image-level classification. Owing to the large data requirements of Vision Transformers, pretrained models are typically adopted and subsequently fine-tuned on smaller datasets to achieve efficient learning and improved performance.
 
@@ -122,11 +122,9 @@ Vision Transformers typically require large datasets for effective training; the
 
 **Encoder:** The encoder is composed of a stack of N = 6 as shown on the left side of Fig.3 identical layers. Each layer has two sub-layers. The first is a multi-head self-attention mechanism, and the second is a simple, position-wise fully connected feed-forward network. We employ a residual connection around each of the two sub-layers, followed by layer normalization . That is, the output of each sub-layer is LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sub-layer itself. To facilitate these residual connections, all sub-layers in the model, as well as the embedding layers, produce outputs of dimension model = 512.
 
-**Decoder:** The decoder is also composed of a stack of N = 6 as shown on the right side of Fig.3 identical layers. In addition to the two sub-layers in each encoder layer, the decoder inserts a third sub-layer, which performs multi-head attention over the output of the encoder stack. Similar to the encoder, we employ residual connections around each of the sub-layers, followed by layer normalization. We also modify the self-attention sub-layer in the decoder stack to prevent positions from attending to subsequent positions. This masking, combined with the fact that the output embeddings are offset by one position, ensures that the predictions for position i can depend only on the known outputs at positions less than i.
-
 ![Fig 3: The Transformer - model architecture. Figure adapted from Source:(Vaswani *et al.*, "Attention Is All You Need",(2017).)](images/image25.png)
 
-**VIII. Transformer Encoder Block (removed Fig 4)**
+**VIII. Transformer Encoder Block**
 
 Residual connections stabilize training, while the MLP refines learned representations.
 
