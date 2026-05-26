@@ -1,19 +1,19 @@
 [
   {
-    "question": "1. What is the key idea behind transformer architectures?",
+    "question": "1. What limitation of CNNs primarily motivated the development of Vision Transformers?",
     "answers": {
-      "a": "Convolution operations",
-      "b": "Kernel based Learning",
-      "c": "Pooling layers",
-      "d": "Self-attention mechanism"
+      "a": "CNNs cannot process color images.",
+      "b": "CNNs are limited to local receptive fields and cannot directly model long-range spatial dependencies.",
+      "c": "CNNs do not use learnable parameters.",
+      "d": "CNNs require positional encoding."
     },
     "explanations": {
-      "a": "Incorrect because transformers do not rely on convolutions.",
-      "b": "Incorrect because kernel based learning is a different paradigm.",
-      "c": "Incorrect because pooling is a CNN-specific operation.",
-      "d": "Correct because transformers are built around self-attention."
+      "a": "Incorrect because CNNs handle color images routinely.",
+      "b": "Correct because ViTs were developed to overcome this limitation by using global self-attention.",
+      "c": "Incorrect because CNNs are trained with learnable weights.",
+      "d": "Incorrect because positional encoding is a transformer concept, not a CNN requirement."
     },
-    "correctAnswer": "d"
+    "correctAnswer": "b"
   },
   {
     "question": "2. How does a Vision Transformer process an image?",
@@ -24,10 +24,10 @@
       "d": "By applying pooling operations"
     },
     "explanations": {
-      "a": "Incorrect because it does not use convolutions.",
-      "b": "Incorrect because it uses patches, not one single vector.",
-      "c": "Correct because it processes images as sequences of patches.",
-      "d": "Incorrect because pooling is not used."
+      "a": "Incorrect because ViTs do not use convolution layers for feature extraction.",
+      "b": "Incorrect because images are divided into patches.",
+      "c": "Correct because ViTs operate on patch embeddings.",
+      "d": "Incorrect because pooling is not a core ViT operation."
     },
     "correctAnswer": "c"
   },
@@ -40,10 +40,10 @@
       "d": "To perform classification"
     },
     "explanations": {
-      "a": "Incorrect because embeddings add parameters.",
-      "b": "Correct because positional embeddings remain essential to retain spatial info.",
-      "c": "Incorrect because normalization is done separately.",
-      "d": "Incorrect because classification uses the CLS token."
+      "a": "Incorrect because embeddings do not reduce parameters.",
+      "b": "Correct because transformers lack inherent spatial awareness.",
+      "c": "Incorrect because normalization is separate.",
+      "d": "Incorrect because classification is done by the CLS token."
     },
     "correctAnswer": "b"
   },
@@ -57,7 +57,7 @@
     },
     "explanations": {
       "a": "Correct because it is used for prediction.",
-      "b": "Incorrect because it aggregates global information, not just background.",
+      "b": "Incorrect because it aggregates global information.",
       "c": "Incorrect because patches are still processed.",
       "d": "Incorrect because it is not a pooling operation."
     },
@@ -72,9 +72,9 @@
       "d": "Normalization"
     },
     "explanations": {
-      "a": "Incorrect because pooling focuses on local neighborhoods.",
-      "b": "Correct because self-attention connects all patches globally.",
-      "c": "Incorrect because dropout is for regularization.",
+      "a": "Incorrect because pooling reduces spatial information.",
+      "b": "Correct because attention connects all patches globally.",
+      "c": "Incorrect because dropout is a regularization method.",
       "d": "Incorrect because normalization stabilizes training."
     },
     "correctAnswer": "b"
@@ -136,10 +136,10 @@
       "d": "To perform pooling"
     },
     "explanations": {
-      "a": "Incorrect because ViTs do not use convolutions.",
-      "b": "Correct because transformers require sequential inputs.",
-      "c": "Incorrect because resolution is preserved.",
-      "d": "Incorrect because pooling is not used."
+      "a": "Incorrect because ViTs do not rely on convolutions.",
+      "b": "Correct because transformers process sequential data.",
+      "c": "Incorrect because patching does not necessarily reduce resolution.",
+      "d": "Incorrect because patching is not pooling."
     },
     "correctAnswer": "b"
   },

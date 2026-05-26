@@ -1,185 +1,197 @@
 ### Theory
 
-Vision Transformers represent a paradigm shift in computer vision by replacing convolutional operations with attention-based learning mechanisms. Unlike Convolutional Neural Networks(CNN), which rely on local receptive fields, Vision Transformers model global relationships across the entire image using self-attention.
+Vision Transformers represent an important shift in computer vision by replacing convolution-based feature extraction with attention-based learning. Unlike Convolutional Neural Networks (CNNs), which mainly capture local patterns through convolutional filters and receptive fields, Vision Transformers model relationships among all regions of an image using the self-attention mechanism. This allows the model to capture both local visual details and global contextual information across the entire image.
 
-Stages in the VIT Training model:
-* Stage1: Image patching
-* Stage2 : Patch Embedding
-* Stage3: Positional Encoding
-* Stage4: Transformer Encoder Block
-* Stage5: Classification token and MLP head
+A Vision Transformer processes an image through a sequence of stages. First, the image is divided into small fixed-size patches. These patches are then flattened and converted into patch embeddings. Positional embeddings are added to preserve spatial information, and the resulting token sequence is then passed through a stack of Transformer encoder blocks. Finally, the MLP head uses a classification token or a pooled representation to predict the output class.
 
-**I. Image patching**
+The major stages in a ViT model are:
 
-Image patching refers to the process of partitioning an input image into a set of fixed-size, non-overlapping square patches, where each patch is subsequently flattened and embedded to form a token that serves as input to the transformer architecture.
+1. Image patching
+2. Patch embedding
+3. Positional encoding
+4. Transformer encoder block
+5. Classification token and MLP classification head
 
-Fig. 1. Is Illustration of image patching applied to an automobile image. The original input image is divided into 156 fixed-size, non-overlapping patches, demonstrating how the image is decomposed into smaller regions. Each patch represents a localized visual token that can be flattened and embedded before being processed by the transformer model. This figure serves as an example of the patch-based representation employed in Vision Transformer architectures.
+**I. Image Patching**
 
-![Fig 1: Image of automobile with 156 patches showing how image is converted in patches](images/image29.png)
+Image patching is the first step in the Vision Transformer pipeline. In this process, an input image is divided into a set of fixed-size, non-overlapping square patches. Instead of processing the image as a whole, ViT treats each patch as an individual visual token, similar to how words are treated as tokens in natural language processing.
+
+Each image patch is flattened into a one-dimensional vector and then passed through a linear projection layer to convert it into an embedding. These embedded patches form the input sequence for the Transformer encoder.
+
+Fig. 1 illustrates the patching process applied to an automobile image from the CIFAR-10 dataset. The original image is divided into smaller image regions, where each patch represents a localized visual component. These patches are later embedded and processed by the Transformer encoder to learn meaningful visual representations.
+
+![Fig 1: Original automobile image and its corresponding patch-wise representation](images/image29.png)
 
 **II. Patch Embedding**
 
-In Vision Transformers, an image is first divided into fixed-size, non-overlapping patches. Each patch is flattened and linearly projected into an embedding space, forming a sequence of patch embeddings. Since transformers were originally designed for sequential data, positional embeddings are added to retain spatial information about the patches.
+After the image is divided into patches, each patch is flattened into a vector. However, the raw flattened patch vectors cannot be directly processed by the Transformer encoder. Therefore, each flattened patch is linearly projected into a fixed-dimensional embedding space.
+
+If an image has dimensions $H \times W \times C$, and each patch has size $P \times P$, then the number of patches is:
+
+$$N = \frac{H \times W}{P^2}$$
+
+Each patch is flattened into a vector of size:
+
+$$P^2 \cdot C$$
+
+This vector is then projected into a $D$-dimensional embedding space, where $D$ is the embedding dimension of the model. The output is a sequence of patch embeddings that serves as the input to the Transformer.
+
+Since the Transformer architecture was originally designed for sequential data, it does not naturally understand the spatial arrangement of image patches. Therefore, positional embeddings are added to the patch embeddings to preserve information about each patch's location in the original image.
 
 **III. Positional Encoding in Vision Transformers**
 
-Since transformer architectures lack inherent awareness of token ordering and treat the input as an unordered set, explicit positional information must be provided. In vision-based transformers, spatial relationships are preserved by adding learnable positional embeddings to each patch token, along with the classification (CLS) token, thereby encoding the relative and absolute locations of image patches within the input sequence.
+Transformer models process input tokens as a sequence but do not inherently understand the order or position of those tokens. For images, this becomes a major issue because the spatial arrangement of patches is essential for visual understanding. For example, the position of edges, shapes, and object parts strongly affects how an image is interpreted.
 
-**Need for Positional Encoding:** Since transformer models process input tokens as an unordered set, positional encodings are incorporated to preserve spatial structure and encode patch location information within the image representation.
+To solve this problem, Vision Transformers add positional embeddings to the patch embeddings. These positional embeddings provide information about the location of each patch in the original image. As a result, the model can distinguish patches that appear in different spatial positions.
 
-Common types of positional encoding used in ViT-model:
+In the original ViT architecture, learnable positional embeddings are commonly used. These embeddings are trained along with the rest of the model and help the Transformer learn spatial relationships among image patches. The classification token also receives its own positional embedding because it is included as part of the input token sequence.
 
-* **Learnable Positional Embeddings**: ViT uses learnable positional vectors to capture local and global spatial relationships adapting better than fixed encodings across image resolutions.
+The input to the Transformer encoder can therefore be represented as:
 
-$$Z_0 = [x_{cls}; z_1; z_2; \ldots; z_N] + E_{pos}$$
+$$Z_0 = [x_{cls}; x_1E; x_2E; \ldots; x_NE] + E_{pos}$$
 
-* **Fixed (sinusoidal) absolute positional embeddings**
-Same idea as the original Transformer sine/cosine encoding, but applied to the patch grid positions.
-No extra learned parameters.
+where $x_{cls}$ is the learnable classification token, $x_1, x_2, \ldots, x_N$ are the flattened image patches, $E$ is the linear projection matrix, and $E_{pos}$ represents the positional embeddings.
 
-$$\text{pe}(\text{pos}, 2i) = \sin\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)$$
+There are two common types of positional encoding:
 
-$$\text{pe}(\text{pos}, 2i+1) = \cos\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)$$
+* **Learnable Positional Embeddings**: In this approach, positional vectors are treated as trainable parameters. The model learns the most suitable positional representation during training. This is the approach used in the original ViT model.
 
-Where:
-* pos = token position in the sequence (0, 1, 2, …)
-* i = dimension index
-* $d_{model}$ = model embedding size (e.g., 512)
-* Even dimensions = sine
-* Odd dimensions = cosine
+* **Fixed Sinusoidal Positional Embeddings**: Fixed sinusoidal positional encoding was originally used in the Transformer architecture for natural language processing. It uses sine and cosine functions to encode position information in a deterministic way. The encoding is given as:
 
-This makes the embedding:
-* Absolute (depends on exact position)
-* Deterministic (no learning required)
-* Continuous & smooth.
+$$\text{PE}(\text{pos}, 2i) = \sin\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)$$
 
-**IV. Self Attention Mechanism**
+$$\text{PE}(\text{pos}, 2i+1) = \cos\left(\frac{\text{pos}}{10000^{2i/d_{\text{model}}}}\right)$$
 
-The core building block of a Vision Transformer is the self-attention mechanism, which enables each patch to attend to all other patches in the image. The self-attention mechanism enables the model to capture long-range dependencies and rich contextual relationships across the input, which are often difficult to model using convolutional operations alone. Multi-head self-attention further enhances this capability by allowing the model to focus on different aspects of the image simultaneously.
+where $\text{pos}$ is the token position, $i$ is the dimension index, and $d_{\text{model}}$ is the embedding dimension. Even dimensions use sine functions, while odd dimensions use cosine functions. This type of encoding is fixed, deterministic, and does not require additional learnable parameters.
 
-**Computation:**
+**IV. Self-Attention Mechanism**
 
-$$\text{attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V, \quad Q = XW_Q, \quad K = XW_K, \quad V = XW_V$$
+The self-attention mechanism is the central component of the Vision Transformer. It allows each image patch to interact with every other patch in the image. This is different from convolutional operations, which typically focus on local neighborhoods. Through self-attention, the model can capture long-range dependencies and global relationships across the entire image.
 
-* Query (Q) = what this token is asking for
-* Key (K) = what this token offers as information
-* Value (V) = the actual content or meaning
-* The attention score between tokens i and j is computed as:
+For each input token, three vectors are generated using learned linear projections:
 
-$$\text{score}(i,j) = \frac{Q_i K_j^T}{\sqrt{d_k}}$$
+* **Query (Q):** represents what a token is looking for
+* **Key (K):** represents what information a token provides
+* **Value (V):** represents the actual content of the token
 
-These scores are normalised with a softmax to produce a attention weights:
+The attention score between tokens is calculated using the dot product between the query and key vectors. These scores indicate how strongly one token should attend to another. The scaled dot-product attention is computed as:
 
-$$\alpha_{ij} = \text{softmax}_j\left(\text{score}(i,j)\right)$$
+$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
 
-Where: i, j = 0,1,2,3……
-* $QK^T$ computes similarity between all pairs of tokens (dot product)
-* $d_k = \frac{D}{h}$ the dimension per attention head
-* Divide by $\sqrt{d_k}$ for scaling to prevent large values causing softmax saturation
-* softmax normalizes scores into probabilities for attention weights
-* Multiply by V to get weighted sum of information from all tokens V.
+where $d_k$ is the dimension of the key vectors. The division by $\sqrt{d_k}$ prevents the dot-product values from becoming too large, which helps avoid softmax saturation and stabilizes training.
 
-**V. Multi-Headed Self-Attention**
+The softmax operation converts the attention scores into normalized attention weights. These weights are then multiplied by the value vectors to produce a weighted combination of information from all tokens. In this way, each patch token is updated based on its relationship with every other patch in the image.
 
-Instead of a single attention operation, Vision Transformers use Multi-Head Attention so the model can capture different relationships in parallel as shown in Fig 2.
-A single attention head captures only one type of relationship—perhaps syntactic, positional, or semantic. To let the model learn multiple perspectives simultaneously, the Transformer employs multi head attention (MHA).
+**V. Multi-Head Self-Attention**
 
-$$\text{multihead}(Q, K, V) = \text{concat}(\text{head}_1, \ldots, \text{head}_h) W_O$$
+Instead of using a single attention operation, Vision Transformers use Multi-Head Self-Attention. Multi-head attention allows the model to learn different types of relationships among image patches simultaneously. For example, one attention head may focus on local texture, another may focus on object shape, while another may capture global structure.
 
-**Residual Connections and Layer Normalization**
+A single attention head can only learn one type of attention pattern at a time. Multi-head attention overcomes this limitation by running several attention operations in parallel. Each head works in a lower-dimensional representation space, and the outputs of all heads are later combined.
 
-Ensures stable training in deep networks by preserving information and normalizing activations.
+The multi-head attention operation is expressed as:
 
-* **Residual (Skip) Connections:** Residual connections bypass transformation blocks to preserve earlier layer information, preventing degradation in deep networks. They enable the model to learn incremental refinements, improving convergence and stability in deep ViTs.
-* **Layer Normalization:** LayerNorm normalizes features across the input, stabilizing training and reducing internal covariate shift. Pre-LN ensures well-conditioned gradients and consistent scaling across tokens in deep Transformers.
+$$\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \text{head}_2, \ldots, \text{head}_h)W^O$$
 
-* **Multi-headed-attention architecture:**
+where each attention head is computed as:
 
-Refer to the right side of Fig .2 , where:
-* The input tokens are first projected into three separate vectors—Query (Q), Key (K), and Value (V)—using learned linear transformations.
-* These Q, K, and V representations are divided into h parallel attention heads, enabling the model to attend to information from multiple representation subspaces simultaneously.
-* Within each head, scaled dot-product attention is computed as:
+$$\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$$
 
-$$\text{attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+Here, $W_i^Q$, $W_i^K$, and $W_i^V$ are learned projection matrices for the query, key, and value vectors of the $i$-th attention head. $W^O$ is the final output projection matrix that combines the outputs of all attention heads.
 
-where d denotes the dimensionality of the key vectors.
+As shown in Fig. 2, the input tokens are first projected into Query, Key, and Value vectors. These projections are then divided into multiple parallel attention heads. Each head independently applies scaled dot-product attention. The outputs from all heads are concatenated and passed through a final linear layer. This enables the model to learn richer and more diverse visual representations than a single attention head.
 
-* This operation produces attention weights that quantify the relevance of each token with respect to all others, followed by a weighted aggregation of the value vectors.
-* The outputs from all attention heads are concatenated and passed through a final linear projection layer to combine information from different heads.
-* This mechanism enables the model to learn global contextual relationships and long-range dependencies, resulting in richer feature representations than those obtained using single-head attention or convolutional operations alone.
+![Fig 2: Scaled dot-product attention and multi-head attention architecture. The left diagram shows scaled dot-product attention, while the right diagram shows multi-head attention, where multiple attention heads operate in parallel, followed by concatenation and a final linear projection. Source: Vaswani *et al.*, "Attention Is All You Need" (2017).](images/image22.png)
 
-![Fig 2: (left) Scaled Dot-Product Attention. (right) Multi-Head Attention consists of several attention layers running in parallel. Source:(Vaswani *et al.*, "Attention Is All You Need"(2017)).](images/image22.png)
+**VI. Residual Connections and Layer Normalization**
 
-**VI. Classification Token**
+Each Transformer encoder block uses residual connections and layer normalization to improve training stability and information flow.
 
-A learnable classification (CLS) token is prepended to the sequence of patch embeddings to aggregate global contextual information across the input image. After propagation through the transformer encoder layers, the final CLS token representation is utilized for image-level classification. Owing to the large data requirements of Vision Transformers, pretrained models are typically adopted and subsequently fine-tuned on smaller datasets to achieve efficient learning and improved performance.
+Residual connections, also called skip connections, add the input of a sub-layer back to its output. This helps preserve information from earlier layers and reduces the risk of gradient degradation in deep networks. Instead of forcing each layer to learn a completely new representation, residual connections allow the model to learn refinements over the previous representation.
 
-Vision Transformers typically require large datasets for effective training; therefore, pretrained models are often used and fine-tuned for smaller datasets such as CIFAR-10
+Layer normalization is used to stabilize the training process. It normalizes the token features across the embedding dimension, helping maintain well-conditioned gradients and reducing instability during optimization. In modern Vision Transformers, Layer Normalization is commonly applied before the self-attention and MLP sub-layers. This is known as the Pre-LN formulation.
 
-**VII. Model Architecture**
+Together, residual connections and layer normalization allow Vision Transformers to be trained effectively even when multiple encoder layers are stacked deeply.
 
-**Encoder Stack:**
+**VII. Classification Token**
 
-**Encoder:** The encoder is composed of a stack of N = 6 as shown on the left side of Fig.3 identical layers. Each layer has two sub-layers. The first is a multi-head self-attention mechanism, and the second is a simple, position-wise fully connected feed-forward network. We employ a residual connection around each of the two sub-layers, followed by layer normalization . That is, the output of each sub-layer is LayerNorm(x + Sublayer(x)), where Sublayer(x) is the function implemented by the sub-layer itself. To facilitate these residual connections, all sub-layers in the model, as well as the embedding layers, produce outputs of dimension model = 512.
+A learnable classification token, commonly called the CLS token, is added to the beginning of the patch embedding sequence before it enters the Transformer encoder. Unlike patch tokens, the CLS token does not correspond to any specific region of the image. Instead, it is a trainable vector that learns to collect global information from all image patches.
 
-![Fig 3: The Transformer - model architecture. Figure adapted from Source:(Vaswani *et al.*, "Attention Is All You Need",(2017).)](images/image25.png)
+As the token sequence passes through the Transformer encoder, the CLS token attends to all patch tokens through the self-attention mechanism. Gradually, it aggregates information from the entire image. After the final encoder layer, the output representation of the CLS token is passed to the MLP classification head, which produces the final class prediction.
 
-**VIII. Transformer Encoder Block**
+This idea is similar to the CLS token used in BERT for natural language processing. However, in Vision Transformers, the CLS token summarizes visual information rather than textual information.
 
-Residual connections stabilize training, while the MLP refines learned representations.
+Some ViT variants use global average pooling instead of a CLS token. In that approach, the final representations of all patch tokens are averaged to obtain a single image-level representation. Both methods are valid, but the original ViT architecture uses the CLS token for classification.
 
-Let Z denote the input token embeddings to a transformer encoder block. The intermediate representation after multi-head self-attention and residual normalization is computed as
+**VIII. Model Architecture of Vision Transformer**
 
-$$Z' = \text{layernorm}(Z + \text{msa}(Z))$$
+The Vision Transformer architecture begins by dividing an image into fixed-size patches. Each patch is flattened and projected into an embedding space using a linear projection layer. Positional embeddings are then added to the patch embeddings, allowing the model to retain spatial information about the original image structure.
+
+A learnable CLS token is prepended to the sequence, and the complete sequence is passed through a stack of Transformer encoder blocks. Each encoder block consists of Multi-Head Self-Attention, residual connections, Layer Normalization, and a position-wise Multilayer Perceptron.
+
+Although the Transformer encoder structure is similar to that used in natural language processing, the key difference is that ViT processes image patches instead of word tokens. This allows the Transformer architecture to be applied directly to visual data.
+
+In the original ViT model proposed by Dosovitskiy et al., the ViT-Base configuration uses an embedding dimension of $d_{\text{model}} = 768$. It contains $L = 12$ Transformer encoder layers and $h = 12$ attention heads. Larger ViT variants increase the embedding dimension, number of layers, and number of attention heads to improve model capacity.
+
+Fig. 3 shows the overall ViT architecture. The image is first converted into patch embeddings, positional information is added, and the resulting sequence is processed through Transformer encoder layers. The final CLS token representation is then used for classification.
+
+![Fig 3: Overview of the Vision Transformer architecture. Source: Dosovitskiy *et al.*, "An Image is Worth 16×16 Words" (2021). The Transformer encoder structure is based on the original Transformer architecture introduced by Vaswani *et al.*, "Attention Is All You Need" (2017).](images/image25.png)
+
+**IX. Transformer Encoder Block**
+
+Each Vision Transformer encoder block applies two main operations to the input token embeddings. The first operation is Multi-Head Self-Attention, and the second is a position-wise MLP. Both operations are combined with residual connections and Layer Normalization.
+
+Let $Z$ denote the input token embeddings to a transformer encoder block. The intermediate representation after multi-head self-attention and residual normalization is computed as:
+
+$$Z' = \text{LayerNorm}(Z + \text{MSA}(Z))$$
 
 Subsequently, the output of the encoder block is obtained by applying a position-wise multilayer perceptron followed by another residual connection and Layer Normalization:
 
-$$Z_{\text{out}} = \text{layernorm}(Z' + \text{mlp}(Z'))$$
+$$Z_{\text{out}} = \text{LayerNorm}(Z' + \text{MLP}(Z'))$$
 
-Above mentioned equations together describe the standard transformer encoder structure, where residual connections preserve input information and Layer Normalization stabilizes training, while the MSA and MLP modules respectively model global dependencies and enhance feature representations.
+These equations together describe the standard transformer encoder structure, where residual connections preserve input information and Layer Normalization stabilizes training, while the MSA and MLP modules respectively model global dependencies and enhance feature representations.
 
-The transformer has two parts, the decoder which is on the right side in Fig 3. and the encoder which is on the left side of Fig 3.
-Imagine we are doing machine translation for now.
-The encoder takes the input data (sentence), and produces an intermediate representation of the input.
-The decoder decodes this intermediate representation step by step and generates the output.
-
-**Working of Encoder:**
-* Input (Embedded patches): Split the image into small patches and turn each patch into a vector (a token).
-* Stack L times: The same encoder layer is repeated L times to improve features.
-
-**One encoder layer:**
-* Layer Normalization is applied before multi-head self-attention to stabilize feature distributions.
-* Multi-head self-attention models global relationships among patch tokens.
-* A residual connection adds the input back to preserve information and improve training stability.
-* Layer Normalization followed by an MLP refines each token independently.
-* A second residual connection produces enhanced token representations for downstream tasks.
-
-**IX. Summary of Core Components**
+**X. Summary of Core Components**
 
 | Component | Purpose | Key Insight |
 | :--- | :--- | :--- |
-| **Input Embedding** | Converts tokens into numerical vectors. | Enables continuous-space representation. |
-| **Positional Encoding** | Adds order information to embeddings. | Introduces sequence awareness. |
-| **Self-Attention** | Captures relationships between all tokens. | Enables global contextual understanding. |
-| **Multi-Head Attention** | Learn multiple relation types in parallel. | Improves diversity and expressiveness. |
-| **Feed-Forward Network** | Applies nonlinear transformation per token. | Enhances representation depth. |
-| **Residual + LN** | Stabilizes training and gradients. | Ensures smooth optimization and deep stacking. |
+| **Patch Embedding** | Converts image patches into token vectors. | Bridges the image data and the transformer input format. |
+| **CLS Token** | Aggregates global image representation. | Enables classification without spatial pooling. |
+| **Positional Encoding** | Adds spatial location information to patch tokens. | Introduces spatial awareness without convolution. |
+| **Self-Attention** | Captures relationships between all patch tokens. | Enables global contextual understanding. |
+| **Multi-Head Attention** | Learns multiple relation types in parallel. | Captures diverse visual features simultaneously. |
+| **MLP / Feed-Forward Network** | Applies a nonlinear transformation per token. | Enhances per-token representation depth. |
+| **Residual + Layer Norm** | Stabilizes training and gradients. | Enables deep stacking without degradation. |
 
-**X. Use Cases of Vision Transformers:**
+**XI. Use Cases of Vision Transformers**
 
-* **Image Segmentation:** Segmentation means dividing an image into meaningful regions such as roads, tumors, objects, backgrounds, or boundaries within an image. Transformer-based segmentation models are becoming state-of-the-art because they can understand both local details and global image context effectively.
+Vision Transformers have been successfully applied across a wide range of computer vision tasks:
 
-* **We need to capture long-range spatial relationships -** Unlike CNNs, which are local in their processing (remember the receptive field section), ViTs leverage self-attention to model relationships between all image patches, making them particularly useful for tasks where spatial context across the entire image matters.
+* **Image Classification:** ViT was originally proposed for image classification and achieved highly competitive performance when pretrained on large-scale datasets such as ImageNet-21k and JFT-300M.
 
-* **To use pretrained models and transfer learning -** We can access pretrained ViTs (such as through Hugging Face or timm) and so fine-tuning becomes much more practical. In this case, even mid-sized datasets can give us great results without training from scratch.
+* **Object Detection:** Transformer-based detectors such as DETR formulate object detection as a direct set-prediction problem. DETR combines a CNN backbone with a Transformer encoder-decoder and learned object queries, enabling end-to-end object detection without hand-designed anchor boxes.
 
-**Merits of Vision Transformers:**
-* Ability to model global context using self-attention
-* Flexible architecture independent of image resolution
-* Strong performance when pretrained on large datasets
-* Interpretability through attention visualization
+* **Semantic and Instance Segmentation:** Models such as SegFormer and Mask2Former adapt Transformer-based architectures for pixel-level prediction tasks using specialized decoder heads. These models are effective because self-attention captures global spatial context, which is useful for understanding object boundaries and scene layout.
 
-**Demerits of Vision Transformers:**
-* High computational and memory requirements
-* Large data dependency for training from scratch
-* Slower convergence compared to CNNs on small datasets
+* **Medical Image Analysis:** ViTs have been applied to histopathology, radiology, and ophthalmology, where modeling long-range spatial relationships across images, scans, or whole-slide images can be valuable.
+
+* **Video Understanding:** By extending image patches across the temporal dimension, ViT variants such as TimeSformer process videos as sequences of spatiotemporal patches.
+
+* **Multi-Modal and Generative Tasks:** ViT-based encoders are used in multi-modal models such as CLIP, where image and text representations are aligned in a shared embedding space. In generative AI, Transformer-based and ViT-inspired architectures have also influenced modern image-generation systems, although models such as Stable Diffusion primarily use latent diffusion with U-Net-based denoising and CLIP-based text conditioning.
+
+**XII. Merits of Vision Transformers:**
+
+* **Ability to model global context:** Self-attention connects every patch to every other patch, enabling ViTs to capture long-range spatial dependencies that CNNs cannot model directly.
+
+* **Resolution flexibility:** Unlike CNNs with fixed kernel sizes, ViTs can be adapted to different input resolutions by adjusting the number of patches.
+
+* **Strong transfer learning:** When pretrained on large datasets (e.g., ImageNet-21k or JFT-300M), ViTs fine-tune effectively on smaller datasets, achieving competitive or superior accuracy to CNNs.
+
+* **Interpretability:** Attention maps provide a natural way to visualize which image regions the model focuses on when making a prediction, offering greater transparency than CNN feature maps.
+
+**XIII. Demerits of Vision Transformers:**
+
+* **High computational cost:** The self-attention operation scales quadratically with the number of patches (O(N²)), making ViTs computationally expensive for high-resolution images.
+
+* **Data hungry:** Due to the lack of CNN-style inductive biases (local connectivity, translation equivariance), ViTs require substantially more training data to learn effective representations from scratch.
+
+* **Slower convergence on small datasets:** Without pretraining, ViTs typically underperform CNNs on datasets with fewer than ~100,000 images, as CNNs benefit from their built-in spatial priors.

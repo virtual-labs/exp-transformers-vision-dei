@@ -15,21 +15,18 @@ The objective of this experiment is to apply a Vision Transformer (ViT) model to
   * 60,000 RGB images of size 32 × 32 pixels
   * 10 object classes: airplane, automobile, bird, cat, deer, dog, frog, horse, ship, and truck
   * 50,000 training images and 10,000 test images
-  * Train subset size: 20000
-  * Val subset size: 5000
-  * Subset test size: 5000
 * To reduce computational cost and training time, a subset of CIFAR-10 is selected in the code while maintaining class diversity.
 * Since Vision Transformers expect larger input resolutions, images are resized to match the pretrained ViT input size before being passed to the model.
 
 **3. Data Preprocessing**
 
-* Convert images into tensor format suitable for transformer input.
+* Convert images into a tensor format suitable for the transformer input.
 * Resize images to the resolution required by the pretrained Vision Transformer.
 * Normalize images using the mean and standard deviation values associated with the pretrained ViT model to ensure compatibility and stable training.
 
 **4. Define Class Labels**
 
-* Define a tuple containing the 10 CIFAR-10 class names.
+* Initialize a tuple containing the 10 CIFAR-10 class names.
 * This mapping is used to convert numerical class labels into human-readable class names during visualization and evaluation.
 
 **5. Load CIFAR-10 Dataset**
@@ -91,7 +88,7 @@ The objective of this experiment is to apply a Vision Transformer (ViT) model to
 * Define the cross-entropy loss function for multi-class classification.
 * This loss function measures the difference between predicted class probabilities and true class labels.
 
-**12. Use Adam Optimizer**
+**12. Use Optimizer**
 
 * Configure an optimizer to update trainable model parameters.
 * Set an appropriate learning rate suitable for fine-tuning a pretrained model.

@@ -8,9 +8,9 @@
       "d": "To remove positional embeddings"
     },
     "explanations": {
-      "a": "Incorrect because pretrained weights do not reduce classes.",
-      "b": "Correct because ViTs require large datasets for effective training.",
-      "c": "Incorrect because fine-tuning is still necessary.",
+      "a": "Incorrect because pretraining does not change class count.",
+      "b": "Correct because ViTs need large datasets when trained from scratch.",
+      "c": "Incorrect because fine-tuning is still required.",
       "d": "Incorrect because positional embeddings remain essential."
     },
     "correctAnswer": "b"
@@ -41,8 +41,8 @@
     },
     "explanations": {
       "a": "Incorrect because ViTs do not use kernels.",
-      "b": "Incorrect because pooling is typical for CNNs.",
-      "c": "Correct because ViTs rely on self-attention.",
+      "b": "Incorrect because pooling is not central to ViTs.",
+      "c": "Correct because attention replaces convolution.",
       "d": "Incorrect because ViTs often have more parameters."
     },
     "correctAnswer": "c"
@@ -56,10 +56,10 @@
       "d": "It replaces positional embeddings"
     },
     "explanations": {
-      "a": "Incorrect because learning rate is independent.",
-      "b": "Correct because it dictates the sequence length.",
-      "c": "Incorrect because loss function is independent.",
-      "d": "Incorrect because embeddings are still needed."
+      "a": "Incorrect because the learning rate is independent.",
+      "b": "Correct because smaller patches create more tokens.",
+      "c": "Incorrect because loss is defined separately.",
+      "d": "Incorrect because embeddings are still required."
     },
     "correctAnswer": "b"
   },
@@ -72,9 +72,9 @@
       "d": "Reduced model size"
     },
     "explanations": {
-      "a": "Incorrect because visualization does not speed up training.",
-      "b": "Incorrect because visualization does not change model performance.",
-      "c": "Correct because it helps understand what the model focuses on.",
+      "a": "Incorrect because visualization does not affect training speed.",
+      "b": "Incorrect because visualization does not change model weights.",
+      "c": "Correct because attention maps reveal where the model focuses.",
       "d": "Incorrect because visualization does not change architecture."
     },
     "correctAnswer": "c"
@@ -91,7 +91,7 @@
       "a": "Correct because early layers capture general visual features useful across tasks.",
       "b": "Incorrect because freezing layers does not change the number of parameters.",
       "c": "Incorrect because positional embeddings remain part of the model.",
-      "d": "Incorrect because class count is controlled by the final layer."
+      "d": "Incorrect because class count is controlled by the classification head."
     },
     "correctAnswer": "a"
   },
@@ -104,10 +104,10 @@
       "d": "It disables self-attention"
     },
     "explanations": {
-      "a": "Incorrect because it actually increases tokens.",
-      "b": "Correct because smaller patches mean more total patches.",
-      "c": "Incorrect because positional encoding is still needed.",
-      "d": "Incorrect because self-attention still operates."
+      "a": "Incorrect because smaller patches create more tokens.",
+      "b": "Correct because more patches are created from the same image.",
+      "c": "Incorrect because positional information is still required.",
+      "d": "Incorrect because self-attention operates regardless of patch size."
     },
     "correctAnswer": "b"
   },
@@ -136,10 +136,10 @@
       "d": "The number of parameters in the model"
     },
     "explanations": {
-      "a": "Incorrect because loss values are computed elsewhere.",
-      "b": "Correct because attention weights show important regions.",
-      "c": "Incorrect because learning rate is a hyperparameter.",
-      "d": "Incorrect because parameters are not visualized."
+      "a": "Incorrect because loss values are scalar metrics.",
+      "b": "Correct because attention maps highlight important patches.",
+      "c": "Incorrect because learning rate is a training parameter.",
+      "d": "Incorrect because parameter count is independent of attention."
     },
     "correctAnswer": "b"
   },
