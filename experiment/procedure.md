@@ -1,6 +1,6 @@
 ### Procedure
 
-The objective of this experiment is to apply a Vision Transformer (ViT) model to an image classification task and to study how attention-based mechanisms and patch-based representations enable effective learning from visual data. This experiment emphasizes understanding pretrained transformer models, fine-tuning strategies, and visualization of attention maps using a subset of the CIFAR-10 dataset.
+The objective of this experiment is to apply a Vision Transformer (ViT) model to an image classification task and to study how attention-based mechanisms and patch representations enable effective learning from visual data. This experiment emphasizes understanding pretrained transformer models, fine-tuning strategies, and visualization of attention maps using a subset of the CIFAR-10 dataset.
 
 **1. Import Required Libraries**
 
