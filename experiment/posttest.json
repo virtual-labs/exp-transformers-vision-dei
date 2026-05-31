@@ -131,17 +131,17 @@
     "question": "9. What insight is gained by visualizing self-attention maps in a Vision Transformer?",
     "answers": {
       "a": "The exact numerical value of loss",
-      "b": "Which image patches influence the model's decision",
-      "c": "The learning rate used during training",
+      "b": "The learning rate used during training",
+      "c": "Which image patches influence the model's decision",
       "d": "The number of parameters in the model"
     },
     "explanations": {
       "a": "Incorrect because loss values are scalar metrics.",
-      "b": "Correct because attention maps highlight important patches.",
-      "c": "Incorrect because learning rate is a training parameter.",
+      "b": "Incorrect because learning rate is a training parameter.",
+      "c": "Correct because attention maps highlight important patches.",
       "d": "Incorrect because parameter count is independent of attention."
     },
-    "correctAnswer": "b"
+    "correctAnswer": "c"
   },
   {
     "question": "10. Compared to CNN feature maps, attention maps in ViTs primarily show:",

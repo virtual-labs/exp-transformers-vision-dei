@@ -83,17 +83,17 @@
     "question": "6. In the attention equation Attention(Q,K,V) = softmax(QK^T / sqrt(d_k))V, What is the role of the softmax function?",
     "answers": {
       "a": "Increasing the dimensionality of vectors",
-      "b": "Converting attention scores into probabilities",
-      "c": "Removing unnecessary neurons during training",
+      "b": "Removing unnecessary neurons during training",
+      "c": "Converting attention scores into probabilities",
       "d": "Initializing model parameters"
     },
     "explanations": {
       "a": "Incorrect because softmax does not increase dimensions.",
-      "b": "Correct because softmax assigns normalized importance weights to different tokens.",
-      "c": "Incorrect because that is the role of dropout.",
+      "b": "Incorrect because that is the role of dropout.",
+      "c": "Correct because softmax assigns normalized importance weights to different tokens.",
       "d": "Incorrect because parameter initialization is done before training begins."
     },
-    "correctAnswer": "b"
+    "correctAnswer": "c"
   },
   {
     "question": "7. Why is the term sqrt(d_k) used in the denominator of the attention equation?",
@@ -128,20 +128,20 @@
     "correctAnswer": "a"
   },
   {
-    "question": "9. In Vision Transformers, why are images converted into a sequence of patches?",
+    "question": "9. What is the purpose of using multiple attention heads in a Vision Transformer?",
     "answers": {
-      "a": "To apply convolution operations",
-      "b": "To make images compatible with transformer architectures",
-      "c": "To reduce image resolution",
-      "d": "To perform pooling"
+      "a": "To process images in grayscale only",
+      "b": "To reduce the total number of model parameters",
+      "c": "To ensure all heads learn the same attention pattern",
+      "d": "To allow the model to attend to different representation subspaces simultaneously"
     },
     "explanations": {
-      "a": "Incorrect because ViTs do not rely on convolutions.",
-      "b": "Correct because transformers process sequential data.",
-      "c": "Incorrect because patching does not necessarily reduce resolution.",
-      "d": "Incorrect because patching is not pooling."
+      "a": "Incorrect because multi-head attention is not related to color channels.",
+      "b": "Incorrect because multiple heads increase computational capacity.",
+      "c": "Incorrect because each head learns independent attention patterns.",
+      "d": "Correct because each head projects Q, K, V into a different subspace, capturing diverse relationships across patches."
     },
-    "correctAnswer": "b"
+    "correctAnswer": "d"
   },
   {
     "question": "10. Which statement best describes self-attention in Vision Transformers?",
