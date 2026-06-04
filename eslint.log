@@ -1,0 +1,35 @@
+
+/home/runner/work/exp-transformers-vision-dei/exp-transformers-vision-dei/experiment/simulation/notebook/js/data.js
+  113:10  warning  'getVariantData' is defined but never used  no-unused-vars
+
+/home/runner/work/exp-transformers-vision-dei/exp-transformers-vision-dei/experiment/simulation/notebook/js/main.js
+   60:22  warning  'getVariantData' is not defined          no-undef
+   69:22  warning  'getVariantData' is not defined          no-undef
+  136:28  warning  'cell' is defined but never used         no-unused-vars
+  238:25  warning  'Chart' is not defined                   no-undef
+  343:10  warning  'showLoading' is defined but never used  no-unused-vars
+  350:10  warning  'hideLoading' is defined but never used  no-unused-vars
+
+/home/runner/work/exp-transformers-vision-dei/exp-transformers-vision-dei/experiment/simulation/notebook/js/variant_loader.js
+  51:22  warning  'getVariantData' is not defined  no-undef
+
+/home/runner/work/exp-transformers-vision-dei/exp-transformers-vision-dei/experiment/simulation/notebook/js/variants_data.js
+  3623:10  warning  'getVariantData' is defined but never used  no-unused-vars
+
+/home/runner/work/exp-transformers-vision-dei/exp-transformers-vision-dei/experiment/simulation/simulation/script.js
+  159:17  warning  'gsap' is not defined                             no-undef
+  206:9   warning  'gsap' is not defined                             no-undef
+  220:11  warning  'gridEl' is assigned a value but never used       no-unused-vars
+  234:15  warning  'stripHeight' is assigned a value but never used  no-unused-vars
+  238:15  warning  'startX' is assigned a value but never used       no-unused-vars
+  255:19  warning  'targetX' is assigned a value but never used      no-unused-vars
+  256:19  warning  'targetY' is assigned a value but never used      no-unused-vars
+  261:13  warning  'gsap' is not defined                             no-undef
+  283:13  warning  'gsap' is not defined                             no-undef
+  333:13  warning  Move function declaration to function body root   no-inner-declarations
+  686:20  warning  'gsap' is not defined                             no-undef
+  708:29  warning  'i' is defined but never used                     no-unused-vars
+  758:15  warning  'b2X' is assigned a value but never used          no-unused-vars
+
+✖ 22 problems (0 errors, 22 warnings)
+

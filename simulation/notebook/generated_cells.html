@@ -1,0 +1,2658 @@
+
+			<!-- Cell 1: Import Libraries -->
+			<div class="notebook-cell" data-cell="1" data-step="1">
+				<div class="cell-header">
+					<span class="cell-label">Step 1: Import Libraries</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="comment"># Core</span>
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> os
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> random
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>from</span> pathlib <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> Path
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> numpy <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>as</span> np
+
+<span class="comment"># PyTorch</span>
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> torch
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> torch.nn <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>as</span> nn
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> torch.optim <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>as</span> optim
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>from</span> torch.utils.data <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> DataLoader, Subset
+
+<span class="comment"># Vision / Data</span>
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> torchvision
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> torchvision.transforms <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>as</span> transforms
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>from</span> torchvision.datasets <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> CIFAR10
+
+<span class="comment"># Visualization</span>
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> matplotlib.pyplot <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>as</span> plt
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> seaborn <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>as</span> sns
+
+<span class="comment"># Metrics</span>
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>from</span> sklearn.metrics <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> confusion_matrix, accuracy_score
+
+<span class="comment"># Model zoo</span>
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> timm
+
+<span class="builtin">print</span>(&quot;All libraries imported successfully.&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>All libraries imported successfully.
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 2: Setup Device & Load Dataset -->
+			<div class="notebook-cell" data-cell="2" data-step="2">
+				<div class="cell-header">
+					<span class="cell-label">Step 2: Setup Device & Load Dataset</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python">DEVICE = torch.device(&quot;cuda&quot; <span class=<span class="string">"keyword"</span>>if</span> torch.cuda.is_available() <span class=<span class="string">"keyword"</span>>else</span> &quot;cpu&quot;)
+
+<span class="builtin">print</span>(f&quot;Using device: {DEVICE}&quot;)
+<span class=<span class="string">"keyword"</span>>if</span> DEVICE.type == &quot;cuda&quot;:
+    <span class="builtin">print</span>(f&quot;GPU: {torch.cuda.get_device_name(<span class="number">0</span>)}&quot;)
+
+
+CLASSES = (
+    &quot;airplane&quot;, &quot;automobile&quot;, &quot;bird&quot;, &quot;cat&quot;, &quot;deer&quot;,
+    &quot;dog&quot;, &quot;frog&quot;, &quot;horse&quot;, &quot;ship&quot;, &quot;truck&quot;
+)
+
+NUM_CLASSES = <span class="builtin">len</span>(CLASSES)
+<span class="builtin">print</span>(f&quot;Number of classes: {NUM_CLASSES}&quot;)
+<span class=<span class="string">"keyword"</span>>for</span> i, name <span class=<span class="string">"keyword"</span>>in</span> <span class="builtin">enumerate</span>(CLASSES):
+    <span class="builtin">print</span>(f&quot; {i} → {name}&quot;)
+
+
+DATA_ROOT = &quot;./data&quot;
+
+train_dataset_raw = CIFAR10(
+    root=DATA_ROOT,
+    train=<span class=<span class="string">"keyword"</span>>True</span>,
+    download=<span class=<span class="string">"keyword"</span>>True</span>,
+    transform=<span class=<span class="string">"keyword"</span>>None</span>
+)
+
+test_dataset_raw = CIFAR10(
+    root=DATA_ROOT,
+    train=<span class=<span class="string">"keyword"</span>>False</span>,
+    download=<span class=<span class="string">"keyword"</span>>True</span>,
+    transform=<span class=<span class="string">"keyword"</span>>None</span>
+)
+
+<span class="builtin">print</span>(f&quot;Full training samples: {<span class="builtin">len</span>(train_dataset_raw)}&quot;)
+<span class="builtin">print</span>(f&quot;Full test samples: {<span class="builtin">len</span>(test_dataset_raw)}&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>Using device: cuda
+
+GPU: NVIDIA GeForce RTX 5090
+
+Number of classes: 10
+ 0 → airplane
+ 1 → automobile
+ 2 → bird
+ 3 → cat
+ 4 → deer
+ 5 → dog
+ 6 → frog
+ 7 → horse
+ 8 → ship
+ 9 → truck
+
+Full training samples: 50000
+Full test samples: 10000
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 3: Visualize Sample Images -->
+			<div class="notebook-cell" data-cell="3" data-step="3">
+				<div class="cell-header">
+					<span class="cell-label">Step 3: Visualize Sample Images</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> show_samples(dataset, classes, n=<span class="number">10</span>):
+    plt.figure(figsize=(<span class="number">15</span>, <span class="number">4</span>))
+    <span class=<span class="string">"keyword"</span>>for</span> i <span class=<span class="string">"keyword"</span>>in</span> <span class="builtin">range</span>(n):
+        img, label = dataset[i]
+        plt.subplot(<span class="number">1</span>, n, i + <span class="number">1</span>)
+        plt.imshow(img)
+        plt.title(classes[label])
+        plt.axis(&quot;off&quot;)
+    plt.show()
+
+show_samples(train_dataset_raw, CLASSES, n=<span class="number">10</span>)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>&lt;Figure size 1500x400 with 10 Axes&gt;</pre>
+						<div class="output-image"><img src="images/vit_variant_01_vit_small_patch8_224_unfreeze0_cell11_output0.png" alt="Output visualization" style="max-width: 100%; height: auto;"></div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 4: Check Class Distribution -->
+			<div class="notebook-cell" data-cell="4" data-step="4">
+				<div class="cell-header">
+					<span class="cell-label">Step 4: Check Class Distribution</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>from</span> collections <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>import</span> Counter
+
+train_labels = [label <span class=<span class="string">"keyword"</span>>for</span> _, label <span class=<span class="string">"keyword"</span>>in</span> train_dataset_raw]
+label_counts = Counter(train_labels)
+
+<span class=<span class="string">"keyword"</span>>for</span> cls_idx, count <span class=<span class="string">"keyword"</span>>in</span> label_counts.items():
+    <span class="builtin">print</span>(f&quot;{CLASSES[cls_idx]:10s}: {count}&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>frog      : 5000
+truck     : 5000
+deer      : 5000
+automobile: 5000
+bird      : 5000
+horse     : 5000
+ship      : 5000
+cat       : 5000
+dog       : 5000
+airplane  : 5000
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 5: Define Data Augmentation -->
+			<div class="notebook-cell" data-cell="5" data-step="5">
+				<div class="cell-header">
+					<span class="cell-label">Step 5: Define Data Augmentation</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python">CIFAR_MEAN = (<span class="number">0.4914</span>, <span class="number">0.4822</span>, <span class="number">0.4465</span>)
+CIFAR_STD  = (<span class="number">0.2023</span>, <span class="number">0.1994</span>, <span class="number">0.2010</span>)
+
+<span class="builtin">print</span>(&quot;Normalization values defined.&quot;)
+
+
+train_transform = transforms.Compose([
+    transforms.RandomCrop(<span class="number">32</span>, padding=<span class="number">4</span>),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+    transforms.Normalize(CIFAR_MEAN, CIFAR_STD),
+])
+
+test_transform = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize(CIFAR_MEAN, CIFAR_STD),
+])
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>Normalization values defined.
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 6: Visualize Augmentation -->
+			<div class="notebook-cell" data-cell="6" data-step="6">
+				<div class="cell-header">
+					<span class="cell-label">Step 6: Visualize Augmentation</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> show_augmented_samples(dataset, transform, classes, n=<span class="number">8</span>):
+    plt.figure(figsize=(<span class="number">15</span>, <span class="number">4</span>))
+    <span class=<span class="string">"keyword"</span>>for</span> i <span class=<span class="string">"keyword"</span>>in</span> <span class="builtin">range</span>(n):
+        img, label = dataset[i]
+        img_aug = transform(img)
+        img_aug = img_aug.permute(<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>)
+        img_aug = img_aug * torch.tensor(CIFAR_STD) + torch.tensor(CIFAR_MEAN)
+        img_aug = img_aug.clamp(<span class="number">0</span>, <span class="number">1</span>)
+
+        plt.subplot(<span class="number">1</span>, n, i + <span class="number">1</span>)
+        plt.imshow(img_aug)
+        plt.title(classes[label])
+        plt.axis(&quot;off&quot;)
+    plt.show()
+
+show_augmented_samples(train_dataset_raw, train_transform, CLASSES)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>&lt;Figure size 1500x400 with 8 Axes&gt;</pre>
+						<div class="output-image"><img src="images/vit_variant_01_vit_small_patch8_224_unfreeze0_cell19_output0.png" alt="Output visualization" style="max-width: 100%; height: auto;"></div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 7: Create Dataloaders -->
+			<div class="notebook-cell" data-cell="7" data-step="7">
+				<div class="cell-header">
+					<span class="cell-label">Step 7: Create Dataloaders</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python">SEED = <span class="number">42</span>
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+
+
+TRAIN_PER_CLASS = <span class="number">2000</span>
+VAL_PER_CLASS   = <span class="number">500</span>
+TEST_PER_CLASS  = <span class="number">500</span>
+
+
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> stratified_split(dataset, train_n, val_n, test_n):
+    class_indices = {i: [] <span class=<span class="string">"keyword"</span>>for</span> i <span class=<span class="string">"keyword"</span>>in</span> <span class="builtin">range</span>(NUM_CLASSES)}
+
+    <span class=<span class="string">"keyword"</span>>for</span> idx, (_, label) <span class=<span class="string">"keyword"</span>>in</span> <span class="builtin">enumerate</span>(dataset):
+        class_indices[label].append(idx)
+
+    train_idx, val_idx, test_idx = [], [], []
+
+    <span class=<span class="string">"keyword"</span>>for</span> cls, indices <span class=<span class="string">"keyword"</span>>in</span> class_indices.items():
+        random.shuffle(indices)
+        train_idx.extend(indices[:train_n])
+        val_idx.extend(indices[train_n:train_n + val_n])
+        test_idx.extend(indices[train_n + val_n:train_n + val_n + test_n])
+
+    <span class=<span class="string">"keyword"</span>>return</span> train_idx, val_idx, test_idx
+
+
+train_idx, val_idx, subset_test_idx = stratified_split(
+    train_dataset_raw,
+    TRAIN_PER_CLASS,
+    VAL_PER_CLASS,
+    TEST_PER_CLASS
+)
+
+<span class="builtin">print</span>(f&quot;Train subset size: {<span class="builtin">len</span>(train_idx)}&quot;)
+<span class="builtin">print</span>(f&quot;Val subset size: {<span class="builtin">len</span>(val_idx)}&quot;)
+<span class="builtin">print</span>(f&quot;Subset test size: {<span class="builtin">len</span>(subset_test_idx)}&quot;)
+
+
+<span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">70</span>)
+<span class="builtin">print</span>(&quot;CREATING DATASET SPLITS&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">70</span>)
+
+<span class="comment"># -----------------------------</span>
+<span class="comment"># Training Dataset</span>
+<span class="comment"># -----------------------------</span>
+train_dataset = Subset(
+    CIFAR10(root=DATA_ROOT, train=<span class=<span class="string">"keyword"</span>>True</span>, transform=train_transform),
+    train_idx
+)
+
+<span class="builtin">print</span>(&quot;\n[TRAIN DATASET]&quot;)
+<span class="builtin">print</span>(f&quot;• Source           : CIFAR-<span class="number">10</span> (train split)&quot;)
+<span class="builtin">print</span>(f&quot;• Samples          : {<span class="builtin">len</span>(train_dataset)}&quot;)
+<span class="builtin">print</span>(f&quot;• Augmentation     : ENABLED&quot;)
+<span class="builtin">print</span>(f&quot;• Purpose          : Model learning&quot;)
+
+<span class="comment"># -----------------------------</span>
+<span class="comment"># Validation Dataset</span>
+<span class="comment"># -----------------------------</span>
+val_dataset = Subset(
+    CIFAR10(root=DATA_ROOT, train=<span class=<span class="string">"keyword"</span>>True</span>, transform=test_transform),
+    val_idx
+)
+
+<span class="builtin">print</span>(&quot;\n[VALIDATION DATASET]&quot;)
+<span class="builtin">print</span>(f&quot;• Source           : CIFAR-<span class="number">10</span> (train split)&quot;)
+<span class="builtin">print</span>(f&quot;• Samples          : {<span class="builtin">len</span>(val_dataset)}&quot;)
+<span class="builtin">print</span>(f&quot;• Augmentation     : DISABLED (only normalization)&quot;)
+<span class="builtin">print</span>(f&quot;• Purpose          : Early stopping &amp; hyperparameter tuning&quot;)
+
+<span class="comment"># -----------------------------</span>
+<span class="comment"># Subset Test Dataset</span>
+<span class="comment"># -----------------------------</span>
+subset_test_dataset = Subset(
+    CIFAR10(root=DATA_ROOT, train=<span class=<span class="string">"keyword"</span>>True</span>, transform=test_transform),
+    subset_test_idx
+)
+
+<span class="builtin">print</span>(&quot;\n[SUBSET TEST DATASET]&quot;)
+<span class="builtin">print</span>(f&quot;• Source           : CIFAR-<span class="number">10</span> (train split)&quot;)
+<span class="builtin">print</span>(f&quot;• Samples          : {<span class="builtin">len</span>(subset_test_dataset)}&quot;)
+<span class="builtin">print</span>(f&quot;• Augmentation     : DISABLED (only normalization)&quot;)
+<span class="builtin">print</span>(f&quot;• Purpose          : Fair evaluation on balanced subset&quot;)
+
+<span class="comment"># -----------------------------</span>
+<span class="comment"># Full CIFAR-<span class="number">10</span> Test Dataset</span>
+<span class="comment"># -----------------------------</span>
+full_test_dataset = CIFAR10(
+    root=DATA_ROOT,
+    train=<span class=<span class="string">"keyword"</span>>False</span>,
+    transform=test_transform
+)
+
+<span class="builtin">print</span>(&quot;\n[FULL TEST DATASET]&quot;)
+<span class="builtin">print</span>(f&quot;• Source           : CIFAR-<span class="number">10</span> (official test split)&quot;)
+<span class="builtin">print</span>(f&quot;• Samples          : {<span class="builtin">len</span>(full_test_dataset)}&quot;)
+<span class="builtin">print</span>(f&quot;• Augmentation     : DISABLED (only normalization)&quot;)
+<span class="builtin">print</span>(f&quot;• Purpose          : Final generalization evaluation&quot;)
+
+<span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">70</span>)
+<span class="builtin">print</span>(&quot;DATASET SETUP COMPLETE&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">70</span>)
+
+
+<span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">70</span>)
+<span class="builtin">print</span>(&quot;CREATING DATALOADERS&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">70</span>)
+
+<span class="comment"># -----------------------------</span>
+<span class="comment"># DataLoader Configuration</span>
+<span class="comment"># -----------------------------</span>
+BATCH_SIZE = <span class="number">128</span>
+NUM_WORKERS = <span class="number">4</span>
+
+<span class="builtin">print</span>(&quot;\n[DATALOADER SETTINGS]&quot;)
+<span class="builtin">print</span>(f&quot;• Batch size        : {BATCH_SIZE}&quot;)
+<span class="builtin">print</span>(f&quot;• Num workers       : {NUM_WORKERS}&quot;)
+<span class="builtin">print</span>(f&quot;• Pin memory        : Enabled (faster GPU transfer)&quot;)
+
+<span class="comment"># -----------------------------</span>
+<span class="comment"># Training DataLoader</span>
+<span class="comment"># -----------------------------</span>
+train_loader = DataLoader(
+    train_dataset,
+    batch_size=BATCH_SIZE,
+    shuffle=<span class=<span class="string">"keyword"</span>>True</span>,
+    num_workers=NUM_WORKERS,
+    pin_memory=<span class=<span class="string">"keyword"</span>>True</span>
+)
+
+<span class="builtin">print</span>(&quot;\n[TRAIN DATALOADER]&quot;)
+<span class="builtin">print</span>(f&quot;• Total samples     : {<span class="builtin">len</span>(train_dataset)}&quot;)
+<span class="builtin">print</span>(f&quot;• Total batches     : {<span class="builtin">len</span>(train_loader)}&quot;)
+<span class="builtin">print</span>(f&quot;• Shuffling         : Enabled&quot;)
+<span class="builtin">print</span>(f&quot;• Purpose           : Model learning (each epoch sees data <span class=<span class="string">"keyword"</span>>in</span> new order)&quot;)
+
+<span class="comment"># -----------------------------</span>
+<span class="comment"># Validation DataLoader</span>
+<span class="comment"># -----------------------------</span>
+val_loader = DataLoader(
+    val_dataset,
+    batch_size=BATCH_SIZE,
+    shuffle=<span class=<span class="string">"keyword"</span>>False</span>,
+    num_workers=NUM_WORKERS,
+    pin_memory=<span class=<span class="string">"keyword"</span>>True</span>
+)
+
+<span class="builtin">print</span>(&quot;\n[VALIDATION DATALOADER]&quot;)
+<span class="builtin">print</span>(f&quot;• Total samples     : {<span class="builtin">len</span>(val_dataset)}&quot;)
+<span class="builtin">print</span>(f&quot;• Total batches     : {<span class="builtin">len</span>(val_loader)}&quot;)
+<span class="builtin">print</span>(f&quot;• Shuffling         : Disabled&quot;)
+<span class="builtin">print</span>(f&quot;• Purpose           : Stable validation &amp; early stopping&quot;)
+
+<span class="comment"># -----------------------------</span>
+<span class="comment"># Subset Test DataLoader</span>
+<span class="comment"># -----------------------------</span>
+subset_test_loader = DataLoader(
+    subset_test_dataset,
+    batch_size=BATCH_SIZE,
+    shuffle=<span class=<span class="string">"keyword"</span>>False</span>,
+    num_workers=NUM_WORKERS,
+    pin_memory=<span class=<span class="string">"keyword"</span>>True</span>
+)
+
+<span class="builtin">print</span>(&quot;\n[SUBSET TEST DATALOADER]&quot;)
+<span class="builtin">print</span>(f&quot;• Total samples     : {<span class="builtin">len</span>(subset_test_dataset)}&quot;)
+<span class="builtin">print</span>(f&quot;• Total batches     : {<span class="builtin">len</span>(subset_test_loader)}&quot;)
+<span class="builtin">print</span>(f&quot;• Shuffling         : Disabled&quot;)
+<span class="builtin">print</span>(f&quot;• Purpose           : Fair evaluation on balanced subset&quot;)
+
+<span class="comment"># -----------------------------</span>
+<span class="comment"># Full CIFAR-<span class="number">10</span> Test DataLoader</span>
+<span class="comment"># -----------------------------</span>
+full_test_loader = DataLoader(
+    full_test_dataset,
+    batch_size=BATCH_SIZE,
+    shuffle=<span class=<span class="string">"keyword"</span>>False</span>,
+    num_workers=NUM_WORKERS,
+    pin_memory=<span class=<span class="string">"keyword"</span>>True</span>
+)
+
+<span class="builtin">print</span>(&quot;\n[FULL TEST DATALOADER]&quot;)
+<span class="builtin">print</span>(f&quot;• Total samples     : {<span class="builtin">len</span>(full_test_dataset)}&quot;)
+<span class="builtin">print</span>(f&quot;• Total batches     : {<span class="builtin">len</span>(full_test_loader)}&quot;)
+<span class="builtin">print</span>(f&quot;• Shuffling         : Disabled&quot;)
+<span class="builtin">print</span>(f&quot;• Purpose           : Final generalization evaluation&quot;)
+
+<span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">70</span>)
+<span class="builtin">print</span>(&quot;DATALOADERS READY&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">70</span>)
+
+
+<span class="builtin">print</span>(&quot;\nSANITY CHECK: ONE TRAINING BATCH&quot;)
+
+images, labels = next(iter(train_loader))
+<span class="builtin">print</span>(f&quot;• Image batch shape : {images.shape}&quot;)
+<span class="builtin">print</span>(f&quot;• Label batch shape : {labels.shape}&quot;)
+<span class="builtin">print</span>(&quot;Expected image shape: (batch_size, <span class="number">3</span>, <span class="number">32</span>, <span class="number">32</span>)&quot;)
+<span class="builtin">print</span>(&quot;Expected label shape: (batch_size,)&quot;)
+
+<span class=<span class="string">"keyword"</span>>if</span> images.shape[<span class="number">1</span>:] == (<span class="number">3</span>, <span class="number">32</span>, <span class="number">32</span>):
+    <span class="builtin">print</span>(&quot;Image tensor shape <span class=<span class="string">"keyword"</span>>is</span> correct&quot;)
+<span class=<span class="string">"keyword"</span>>else</span>:
+    <span class="builtin">print</span>(&quot;Image tensor shape <span class=<span class="string">"keyword"</span>>is</span> incorrect&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>&lt;torch._C.Generator at 0x7cc9a432d190&gt;
+Train subset size: 20000
+Val subset size: 5000
+Subset test size: 5000
+
+
+======================================================================
+CREATING DATASET SPLITS
+======================================================================
+
+
+[TRAIN DATASET]
+• Source           : CIFAR-10 (train split)
+• Samples          : 20000
+• Augmentation     : ENABLED
+• Purpose          : Model learning
+
+
+[VALIDATION DATASET]
+• Source           : CIFAR-10 (train split)
+• Samples          : 5000
+• Augmentation     : DISABLED (only normalization)
+• Purpose          : Early stopping &amp; hyperparameter tuning
+
+
+[SUBSET TEST DATASET]
+• Source           : CIFAR-10 (train split)
+• Samples          : 5000
+• Augmentation     : DISABLED (only normalization)
+• Purpose          : Fair evaluation on balanced subset
+
+
+[FULL TEST DATASET]
+• Source           : CIFAR-10 (official test split)
+• Samples          : 10000
+• Augmentation     : DISABLED (only normalization)
+• Purpose          : Final generalization evaluation
+
+======================================================================
+DATASET SETUP COMPLETE
+======================================================================
+
+
+======================================================================
+CREATING DATALOADERS
+======================================================================
+
+[DATALOADER SETTINGS]
+• Batch size        : 128
+• Num workers       : 4
+• Pin memory        : Enabled (faster GPU transfer)
+
+[TRAIN DATALOADER]
+• Total samples     : 20000
+• Total batches     : 157
+• Shuffling         : Enabled
+• Purpose           : Model learning (each epoch sees data in new order)
+
+[VALIDATION DATALOADER]
+• Total samples     : 5000
+• Total batches     : 40
+• Shuffling         : Disabled
+• Purpose           : Stable validation &amp; early stopping
+
+[SUBSET TEST DATALOADER]
+• Total samples     : 5000
+• Total batches     : 40
+• Shuffling         : Disabled
+• Purpose           : Fair evaluation on balanced subset
+
+[FULL TEST DATALOADER]
+• Total samples     : 10000
+• Total batches     : 79
+• Shuffling         : Disabled
+• Purpose           : Final generalization evaluation
+
+======================================================================
+DATALOADERS READY
+======================================================================
+
+
+SANITY CHECK: ONE TRAINING BATCH
+
+• Image batch shape : torch.Size([128, 3, 32, 32])
+• Label batch shape : torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+Expected label shape: (batch_size,)
+Image tensor shape is correct
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 8: Build Pretrained ViT Model -->
+			<div class="notebook-cell" data-cell="8" data-step="8">
+				<div class="cell-header">
+					<span class="cell-label">Step 8: Build Pretrained ViT Model</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">11</span> (FIXED): BUILDING PRETRAINED ViT-SMALL FOR CIFAR-<span class="number">10</span>&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+
+model = timm.create_model(
+    MODEL_NAME,
+    pretrained=<span class=<span class="string">"keyword"</span>>True</span>,
+    num_classes=NUM_CLASSES,
+    img_size=<span class="number">32</span>   
+)
+
+model = model.to(DEVICE)
+
+<span class="builtin">print</span>(&quot;\n[MODEL LOADING CONFIRMATION]&quot;)
+<span class="builtin">print</span>(f&quot;• Model name           : {MODEL_NAME}&quot;)
+<span class="builtin">print</span>(&quot;• Pretrained weights  : ImageNet&quot;)
+<span class="builtin">print</span>(&quot;• Image size override : <span class="number">32</span>×<span class="number">32</span> (CIFAR-<span class="number">10</span>)&quot;)
+<span class="builtin">print</span>(&quot;• Patch size          : <span class="number">8</span>×<span class="number">8</span>&quot;)
+<span class="builtin">print</span>(&quot;• Number of classes   : <span class="number">10</span>&quot;)
+<span class="builtin">print</span>(f&quot;• Model device        : {DEVICE}&quot;)
+
+
+
+<span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">70</span>)
+<span class="builtin">print</span>(&quot;VERIFYING MODEL INPUT COMPATIBILITY&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">70</span>)
+
+dummy_input = torch.randn(<span class="number">1</span>, <span class="number">3</span>, <span class="number">32</span>, <span class="number">32</span>).to(DEVICE)
+
+<span class=<span class="string">"keyword"</span>>try</span>:
+    dummy_output = model(dummy_input)
+    <span class="builtin">print</span>(&quot;✅ Model successfully accepted <span class="number">32</span>×<span class="number">32</span> input&quot;)
+    <span class="builtin">print</span>(f&quot;• Output shape: {dummy_output.shape}&quot;)
+    <span class="builtin">print</span>(&quot;Expected shape: (<span class="number">1</span>, <span class="number">10</span>)&quot;)
+<span class=<span class="string">"keyword"</span>>except</span> Exception <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>as</span> e:
+    <span class="builtin">print</span>(&quot;❌ Model failed on <span class="number">32</span>×<span class="number">32</span> input&quot;)
+    <span class="builtin">print</span>(e)
+
+
+<span class="builtin">print</span>(&quot;\n[PATCH EMBEDDING VERIFICATION]&quot;)
+
+patch_size = model.patch_embed.patch_size
+embed_dim = model.embed_dim
+
+<span class="builtin">print</span>(f&quot;• Patch size <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>from</span> model      : {patch_size}&quot;)
+<span class="builtin">print</span>(f&quot;• Embedding dimension        : {embed_dim}&quot;)
+
+expected_patches = (<span class="number">32</span> // patch_size[<span class="number">0</span>]) ** <span class="number">2</span>
+<span class="builtin">print</span>(f&quot;• Expected patches per image : {expected_patches}&quot;)
+<span class="builtin">print</span>(&quot;• Expected tokens (+ CLS)    :&quot;, expected_patches + <span class="number">1</span>)
+
+<span class="builtin">print</span>(&quot;\nExplanation:&quot;)
+<span class="builtin">print</span>(&quot;• CIFAR-<span class="number">10</span> image size = <span class="number">32</span>×<span class="number">32</span>&quot;)
+<span class="builtin">print</span>(&quot;• Patch size = <span class="number">8</span>×<span class="number">8</span> → (<span class="number">32</span>/<span class="number">8</span>)² = <span class="number">16</span> patches&quot;)
+<span class="builtin">print</span>(&quot;• +<span class="number">1</span> CLS token → total <span class="number">17</span> tokens&quot;)
+
+<span class=<span class="string">"keyword"</span>>if</span> expected_patches == <span class="number">16</span>:
+    <span class="builtin">print</span>(&quot; Patch-to-token mapping <span class=<span class="string">"keyword"</span>>is</span> correct&quot;)
+<span class=<span class="string">"keyword"</span>>else</span>:
+    <span class="builtin">print</span>(&quot; Patch-to-token mapping <span class=<span class="string">"keyword"</span>>is</span> incorrect&quot;)
+
+
+<span class="builtin">print</span>(&quot;\n[CLS TOKEN CHECK]&quot;)
+
+<span class=<span class="string">"keyword"</span>>if</span> hasattr(model, &quot;cls_token&quot;):
+    <span class="builtin">print</span>(&quot; CLS token <span class=<span class="string">"keyword"</span>>is</span> present <span class=<span class="string">"keyword"</span>>in</span> the model&quot;)
+    <span class="builtin">print</span>(f&quot;CLS token shape: {model.cls_token.shape}&quot;)
+<span class=<span class="string">"keyword"</span>>else</span>:
+    <span class="builtin">print</span>(&quot; CLS token <span class=<span class="string">"keyword"</span>>is</span> missing (this should NOT happen)&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 11 (FIXED): BUILDING PRETRAINED ViT-SMALL FOR CIFAR-10
+================================================================================
+
+
+[MODEL LOADING CONFIRMATION]
+• Model name           : vit_small_patch8_224
+• Pretrained weights  : ImageNet
+• Image size override : 32×32 (CIFAR-10)
+• Patch size          : 8×8
+• Number of classes   : 10
+• Model device        : cuda
+
+
+======================================================================
+VERIFYING MODEL INPUT COMPATIBILITY
+======================================================================
+
+✅ Model successfully accepted 32×32 input
+• Output shape: torch.Size([1, 10])
+Expected shape: (1, 10)
+
+
+[PATCH EMBEDDING VERIFICATION]
+• Patch size from model      : (8, 8)
+• Embedding dimension        : 384
+• Expected patches per image : 16
+• Expected tokens (+ CLS)    : 17
+
+Explanation:
+• CIFAR-10 image size = 32×32
+• Patch size = 8×8 → (32/8)² = 16 patches
+• +1 CLS token → total 17 tokens
+ Patch-to-token mapping is correct
+
+
+[CLS TOKEN CHECK]
+ CLS token is present in the model
+CLS token shape: torch.Size([1, 1, 384])
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 9: Count Model Parameters -->
+			<div class="notebook-cell" data-cell="9" data-step="9">
+				<div class="cell-header">
+					<span class="cell-label">Step 9: Count Model Parameters</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">12</span>: COUNTING MODEL PARAMETERS&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+total_params = <span class="builtin">sum</span>(p.numel() <span class=<span class="string">"keyword"</span>>for</span> p <span class=<span class="string">"keyword"</span>>in</span> model.parameters())
+trainable_params = <span class="builtin">sum</span>(p.numel() <span class=<span class="string">"keyword"</span>>for</span> p <span class=<span class="string">"keyword"</span>>in</span> model.parameters() <span class=<span class="string">"keyword"</span>>if</span> p.requires_grad)
+
+<span class="builtin">print</span>(f&quot;• Total parameters      : {total_params:,}&quot;)
+<span class="builtin">print</span>(f&quot;• Trainable parameters  : {trainable_params:,}&quot;)
+
+<span class="builtin">print</span>(&quot;\nExpected:&quot;)
+<span class="builtin">print</span>(&quot;• ViT-Small ≈ <span class="number">22</span> million parameters&quot;)
+
+<span class=<span class="string">"keyword"</span>>if</span> total_params &gt; 20_000_000:
+    <span class="builtin">print</span>(&quot; Parameter count matches ViT-Small&quot;)
+<span class=<span class="string">"keyword"</span>>else</span>:
+    <span class="builtin">print</span>(&quot;Unexpected parameter count&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 12: COUNTING MODEL PARAMETERS
+================================================================================
+• Total parameters      : 21,379,210
+• Trainable parameters  : 21,379,210
+
+Expected:
+• ViT-Small ≈ 22 million parameters
+ Parameter count matches ViT-Small
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 10: Model Architecture -->
+			<div class="notebook-cell" data-cell="10" data-step="10">
+				<div class="cell-header">
+					<span class="cell-label">Step 10: Model Architecture</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">13</span>: MODEL ARCHITECTURE OVERVIEW&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+<span class="builtin">print</span>(model)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 13: MODEL ARCHITECTURE OVERVIEW
+================================================================================
+VisionTransformer(
+  (patch_embed): PatchEmbed(
+    (proj): Conv2d(3, 384, kernel_size=(8, 8), stride=(8, 8))
+    (norm): Identity()
+  )
+  (pos_drop): Dropout(p=0.0, inplace=False)
+  (patch_drop): Identity()
+  (norm_pre): Identity()
+  (blocks): Sequential(
+    (0): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (1): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (2): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (3): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (4): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (5): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (6): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (7): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (8): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (9): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (10): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+    (11): Block(
+      (norm1): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (attn): Attention(
+        (qkv): Linear(in_features=384, out_features=1152, bias=True)
+        (q_norm): Identity()
+        (k_norm): Identity()
+        (attn_drop): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (proj): Linear(in_features=384, out_features=384, bias=True)
+        (proj_drop): Dropout(p=0.0, inplace=False)
+      )
+      (ls1): Identity()
+      (drop_path1): Identity()
+      (norm2): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+      (mlp): Mlp(
+        (fc1): Linear(in_features=384, out_features=1536, bias=True)
+        (act): GELU(approximate=&#x27;none&#x27;)
+        (drop1): Dropout(p=0.0, inplace=False)
+        (norm): Identity()
+        (fc2): Linear(in_features=1536, out_features=384, bias=True)
+        (drop2): Dropout(p=0.0, inplace=False)
+      )
+      (ls2): Identity()
+      (drop_path2): Identity()
+    )
+  )
+  (norm): LayerNorm((384,), eps=1e-06, elementwise_affine=True)
+  (fc_norm): Identity()
+  (head_drop): Dropout(p=0.0, inplace=False)
+  (head): Linear(in_features=384, out_features=10, bias=True)
+)
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 11: Loss Function & Optimizer -->
+			<div class="notebook-cell" data-cell="11" data-step="11">
+				<div class="cell-header">
+					<span class="cell-label">Step 11: Loss Function & Optimizer</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">14</span>: DEFINING LOSS FUNCTION &amp; OPTIMIZER&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+LABEL_SMOOTHING = <span class="number">0.1</span>
+
+criterion = nn.CrossEntropyLoss(label_smoothing=LABEL_SMOOTHING)
+
+<span class="builtin">print</span>(&quot;\n[LOSS FUNCTION]&quot;)
+<span class="builtin">print</span>(&quot;• Type              : CrossEntropyLoss&quot;)
+<span class="builtin">print</span>(f&quot;• Label smoothing   : {LABEL_SMOOTHING}&quot;)
+<span class="builtin">print</span>(&quot;• Purpose           : Prevent overconfident predictions&quot;)
+<span class="builtin">print</span>(&quot;• Benefit           : Better generalization <span class=<span class="string">"keyword"</span>>for</span> Transformers&quot;)
+
+
+LEARNING_RATE = 3e-<span class="number">4</span>
+WEIGHT_DECAY = <span class="number">0.05</span>
+
+optimizer = optim.AdamW(
+    model.parameters(),
+    lr=LEARNING_RATE,
+    weight_decay=WEIGHT_DECAY
+)
+
+<span class="builtin">print</span>(&quot;\n[OPTIMIZER]&quot;)
+<span class="builtin">print</span>(&quot;• Optimizer         : AdamW&quot;)
+<span class="builtin">print</span>(f&quot;• Learning rate     : {LEARNING_RATE}&quot;)
+<span class="builtin">print</span>(f&quot;• Weight decay      : {WEIGHT_DECAY}&quot;)
+<span class="builtin">print</span>(&quot;• Why AdamW?        : Correct decoupled weight decay (better <span class=<span class="string">"keyword"</span>>for</span> ViT)&quot;)
+
+
+<span class="builtin">print</span>(&quot;\n[OPTIMIZER SANITY CHECK]&quot;)
+<span class="builtin">print</span>(f&quot;• Number of parameter groups: {<span class="builtin">len</span>(optimizer.param_groups)}&quot;)
+<span class="builtin">print</span>(&quot;Expected: <span class="number">1</span> parameter group&quot;)
+
+<span class=<span class="string">"keyword"</span>>if</span> <span class="builtin">len</span>(optimizer.param_groups) == <span class="number">1</span>:
+    <span class="builtin">print</span>(&quot;✅ Optimizer correctly attached to model parameters&quot;)
+<span class=<span class="string">"keyword"</span>>else</span>:
+    <span class="builtin">print</span>(&quot;❌ Unexpected optimizer configuration&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 14: DEFINING LOSS FUNCTION &amp; OPTIMIZER
+================================================================================
+
+[LOSS FUNCTION]
+• Type              : CrossEntropyLoss
+• Label smoothing   : 0.1
+• Purpose           : Prevent overconfident predictions
+• Benefit           : Better generalization for Transformers
+
+
+[OPTIMIZER]
+• Optimizer         : AdamW
+• Learning rate     : 0.0003
+• Weight decay      : 0.05
+• Why AdamW?        : Correct decoupled weight decay (better for ViT)
+
+
+[OPTIMIZER SANITY CHECK]
+• Number of parameter groups: 1
+Expected: 1 parameter group
+✅ Optimizer correctly attached to model parameters
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 12: Learning Rate Scheduler -->
+			<div class="notebook-cell" data-cell="12" data-step="12">
+				<div class="cell-header">
+					<span class="cell-label">Step 12: Learning Rate Scheduler</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">15</span>: DEFINING LEARNING RATE SCHEDULER&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+MAX_EPOCHS = <span class="number">100</span>  <span class="comment"># upper bound (early stopping will stop earlier)</span>
+
+scheduler = optim.lr_scheduler.CosineAnnealingLR(
+    optimizer,
+    T_max=MAX_EPOCHS
+)
+
+<span class="builtin">print</span>(&quot;\n[LEARNING RATE SCHEDULER]&quot;)
+<span class="builtin">print</span>(&quot;• Scheduler type    : CosineAnnealingLR&quot;)
+<span class="builtin">print</span>(f&quot;• Maximum epochs    : {MAX_EPOCHS}&quot;)
+<span class="builtin">print</span>(&quot;• LR behavior       : Gradually decays <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>from</span> initial LR to near zero&quot;)
+<span class="builtin">print</span>(&quot;• Why cosine?       : Smooth decay improves transformer convergence&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 15: DEFINING LEARNING RATE SCHEDULER
+================================================================================
+
+[LEARNING RATE SCHEDULER]
+• Scheduler type    : CosineAnnealingLR
+• Maximum epochs    : 100
+• LR behavior       : Gradually decays from initial LR to near zero
+• Why cosine?       : Smooth decay improves transformer convergence
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 13: Training Function -->
+			<div class="notebook-cell" data-cell="13" data-step="13">
+				<div class="cell-header">
+					<span class="cell-label">Step 13: Training Function</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">16</span>: DEFINING TRAINING FUNCTION (MixUp + CutMix)&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> mixup_data(x, y, alpha=<span class="number">1.0</span>):
+    lam = np.random.beta(alpha, alpha)
+    batch_size = x.size(<span class="number">0</span>)
+    index = torch.randperm(batch_size).to(x.device)
+
+    mixed_x = lam * x + (<span class="number">1</span> - lam) * x[index]
+    y_a, y_b = y, y[index]
+    <span class=<span class="string">"keyword"</span>>return</span> mixed_x, y_a, y_b, lam
+
+
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> cutmix_data(x, y, alpha=<span class="number">1.0</span>):
+    lam = np.random.beta(alpha, alpha)
+    batch_size, _, H, W = x.size()
+    index = torch.randperm(batch_size).to(x.device)
+
+    cx = np.random.randint(W)
+    cy = np.random.randint(H)
+    w = <span class="builtin">int</span>(W * np.sqrt(<span class="number">1</span> - lam))
+    h = <span class="builtin">int</span>(H * np.sqrt(<span class="number">1</span> - lam))
+
+    x1 = np.clip(cx - w // <span class="number">2</span>, <span class="number">0</span>, W)
+    x2 = np.clip(cx + w // <span class="number">2</span>, <span class="number">0</span>, W)
+    y1 = np.clip(cy - h // <span class="number">2</span>, <span class="number">0</span>, H)
+    y2 = np.clip(cy + h // <span class="number">2</span>, <span class="number">0</span>, H)
+
+    x[:, :, y1:y2, x1:x2] = x[index, :, y1:y2, x1:x2]
+    lam = <span class="number">1</span> - ((x2 - x1) * (y2 - y1) / (W * H))
+
+    y_a, y_b = y, y[index]
+    <span class=<span class="string">"keyword"</span>>return</span> x, y_a, y_b, lam
+
+
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> train_one_epoch(model, loader, optimizer, criterion, device, epoch):
+    model.train()
+
+    running_loss = <span class="number">0.0</span>
+    correct = <span class="number">0</span>
+    total = <span class="number">0</span>
+
+    <span class="builtin">print</span>(&quot;\n&quot; + &quot;-&quot;*<span class="number">60</span>)
+    <span class="builtin">print</span>(f&quot;Training Epoch {epoch}&quot;)
+    <span class="builtin">print</span>(&quot;-&quot;*<span class="number">60</span>)
+
+    <span class=<span class="string">"keyword"</span>>for</span> batch_idx, (images, labels) <span class=<span class="string">"keyword"</span>>in</span> <span class="builtin">enumerate</span>(loader):
+        images, labels = images.to(device), labels.to(device)
+
+        <span class="comment"># Randomly choose MixUp <span class=<span class="string">"keyword"</span>>or</span> CutMix</span>
+        use_cutmix = np.random.rand() &lt; <span class="number">0.5</span>
+
+        <span class=<span class="string">"keyword"</span>>if</span> use_cutmix:
+            images, y_a, y_b, lam = cutmix_data(images, labels)
+            aug_type = &quot;CutMix&quot;
+        <span class=<span class="string">"keyword"</span>>else</span>:
+            images, y_a, y_b, lam = mixup_data(images, labels)
+            aug_type = &quot;MixUp&quot;
+
+        optimizer.zero_grad()
+        outputs = model(images)
+
+        loss = lam * criterion(outputs, y_a) + (<span class="number">1</span> - lam) * criterion(outputs, y_b)
+        loss.backward()
+        optimizer.step()
+
+        running_loss += loss.item()
+        _, predicted = outputs.<span class="builtin">max</span>(<span class="number">1</span>)
+
+        total += labels.size(<span class="number">0</span>)
+        correct += (lam * predicted.eq(y_a).<span class="builtin">sum</span>().item() +
+                    (<span class="number">1</span> - lam) * predicted.eq(y_b).<span class="builtin">sum</span>().item())
+
+        <span class=<span class="string">"keyword"</span>>if</span> batch_idx == <span class="number">0</span>:
+            <span class="builtin">print</span>(f&quot;First batch augmentation used: {aug_type}&quot;)
+            <span class="builtin">print</span>(f&quot;• Batch image shape: {images.shape}&quot;)
+            <span class="builtin">print</span>(f&quot;• Batch label shape: {labels.shape}&quot;)
+            <span class="builtin">print</span>(&quot;Expected image shape: (batch_size, <span class="number">3</span>, <span class="number">32</span>, <span class="number">32</span>)&quot;)
+
+    epoch_loss = running_loss / <span class="builtin">len</span>(loader)
+    epoch_acc = <span class="number">100</span>. * correct / total
+
+    <span class="builtin">print</span>(f&quot;Epoch {epoch} Training Loss: {epoch_loss:.4f}&quot;)
+    <span class="builtin">print</span>(f&quot;Epoch {epoch} Training Accuracy: {epoch_acc:.2f}%&quot;)
+
+    <span class=<span class="string">"keyword"</span>>return</span> epoch_loss, epoch_acc
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 16: DEFINING TRAINING FUNCTION (MixUp + CutMix)
+================================================================================
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 14: Evaluation Function -->
+			<div class="notebook-cell" data-cell="14" data-step="14">
+				<div class="cell-header">
+					<span class="cell-label">Step 14: Evaluation Function</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">17</span>: DEFINING EVALUATION FUNCTION&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> evaluate(model, loader, criterion, device, split_name=&quot;Validation&quot;):
+    model.eval()
+
+    running_loss = <span class="number">0.0</span>
+    correct = <span class="number">0</span>
+    total = <span class="number">0</span>
+
+    all_preds = []
+    all_labels = []
+
+    <span class="builtin">print</span>(f&quot;\nEvaluating on {split_name} <span class="builtin">set</span>...&quot;)
+
+    <span class=<span class="string">"keyword"</span>>with</span> torch.no_grad():
+        <span class=<span class="string">"keyword"</span>>for</span> images, labels <span class=<span class="string">"keyword"</span>>in</span> loader:
+            images, labels = images.to(device), labels.to(device)
+
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+
+            running_loss += loss.item()
+            _, predicted = outputs.<span class="builtin">max</span>(<span class="number">1</span>)
+
+            total += labels.size(<span class="number">0</span>)
+            correct += predicted.eq(labels).<span class="builtin">sum</span>().item()
+
+            all_preds.extend(predicted.cpu().numpy())
+            all_labels.extend(labels.cpu().numpy())
+
+    avg_loss = running_loss / <span class="builtin">len</span>(loader)
+    acc = <span class="number">100</span>. * correct / total
+
+    <span class="builtin">print</span>(f&quot;{split_name} Loss     : {avg_loss:.4f}&quot;)
+    <span class="builtin">print</span>(f&quot;{split_name} Accuracy : {acc:.2f}%&quot;)
+
+    <span class=<span class="string">"keyword"</span>>return</span> avg_loss, acc, all_labels, all_preds
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 17: DEFINING EVALUATION FUNCTION
+================================================================================
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 15: Early Stopping Logic -->
+			<div class="notebook-cell" data-cell="15" data-step="15">
+				<div class="cell-header">
+					<span class="cell-label">Step 15: Early Stopping Logic</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">18</span>: DEFINING EARLY STOPPING&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+<span class=<span class="string">"keyword"</span>>class</span> EarlyStopping:
+    <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> __init__(self, patience=<span class="number">8</span>, min_delta=<span class="number">0.0</span>):
+        self.patience = patience
+        self.min_delta = min_delta
+        self.best_acc = <span class="number">0.0</span>
+        self.counter = <span class="number">0</span>
+        self.should_stop = <span class=<span class="string">"keyword"</span>>False</span>
+
+        <span class="builtin">print</span>(&quot;\n[EARLY STOPPING CONFIGURATION]&quot;)
+        <span class="builtin">print</span>(f&quot;• Patience   : {patience} epochs&quot;)
+        <span class="builtin">print</span>(f&quot;• Min delta  : {min_delta}&quot;)
+        <span class="builtin">print</span>(&quot;• Monitored  : Validation accuracy&quot;)
+
+    <span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> step(self, val_acc):
+        <span class=<span class="string">"keyword"</span>>if</span> val_acc &gt; self.best_acc + self.min_delta:
+            <span class="builtin">print</span>(f&quot;✔ Validation accuracy improved: {self.best_acc:.2f}% → {val_acc:.2f}%&quot;)
+            self.best_acc = val_acc
+            self.counter = <span class="number">0</span>
+        <span class=<span class="string">"keyword"</span>>else</span>:
+            self.counter += <span class="number">1</span>
+            <span class="builtin">print</span>(f&quot;✖ No improvement. Counter: {self.counter}/{self.patience}&quot;)
+
+        <span class=<span class="string">"keyword"</span>>if</span> self.counter &gt;= self.patience:
+            self.should_stop = <span class=<span class="string">"keyword"</span>>True</span>
+            <span class="builtin">print</span>(&quot;Early stopping triggered&quot;)
+
+        <span class=<span class="string">"keyword"</span>>return</span> self.should_stop
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 18: DEFINING EARLY STOPPING
+================================================================================
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 16: Two-Stage Fine-Tuning Setup -->
+			<div class="notebook-cell" data-cell="16" data-step="16">
+				<div class="cell-header">
+					<span class="cell-label">Step 16: Two-Stage Fine-Tuning Setup</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">19</span>: TWO-STAGE FINE-TUNING&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+<span class="builtin">print</span>(&quot;\n[STAGE <span class="number">1</span>: FREEZING BACKBONE]&quot;)
+<span class=<span class="string">"keyword"</span>>for</span> name, param <span class=<span class="string">"keyword"</span>>in</span> model.named_parameters():
+    <span class=<span class="string">"keyword"</span>>if</span> &quot;head&quot; <span class=<span class="string">"keyword"</span>>not</span> <span class=<span class="string">"keyword"</span>>in</span> name:
+        param.requires_grad = <span class=<span class="string">"keyword"</span>>False</span>
+
+trainable_params = <span class="builtin">sum</span>(p.numel() <span class=<span class="string">"keyword"</span>>for</span> p <span class=<span class="string">"keyword"</span>>in</span> model.parameters() <span class=<span class="string">"keyword"</span>>if</span> p.requires_grad)
+
+<span class="builtin">print</span>(f&quot;• Trainable parameters after freezing: {trainable_params:,}&quot;)
+<span class="builtin">print</span>(&quot;• Only classification head <span class=<span class="string">"keyword"</span>>is</span> trainable&quot;)
+
+
+optimizer = optim.AdamW(
+    <span class="builtin">filter</span>(<span class=<span class="string">"keyword"</span>>lambda</span> p: p.requires_grad, model.parameters()),
+    lr=LEARNING_RATE,
+    weight_decay=WEIGHT_DECAY
+)
+
+<span class="builtin">print</span>(&quot;Optimizer reconfigured <span class=<span class="string">"keyword"</span>>for</span> Stage <span class="number">1</span>&quot;)
+
+
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> unfreeze_model(model, n_blocks=<span class="number">12</span>):
+    <span class=<span class="string">"keyword"</span>>if</span> n_blocks &gt;= <span class="number">12</span>:
+        <span class=<span class="string">"keyword"</span>>for</span> param <span class=<span class="string">"keyword"</span>>in</span> model.parameters():
+            param.requires_grad = <span class=<span class="string">"keyword"</span>>True</span>
+        <span class="builtin">print</span>(&quot;\n[STAGE <span class="number">2</span>: UNFREEZING FULL MODEL]&quot;)
+    <span class=<span class="string">"keyword"</span>>else</span>:
+        <span class="comment"># Freeze all parameters first</span>
+        <span class=<span class="string">"keyword"</span>>for</span> param <span class=<span class="string">"keyword"</span>>in</span> model.parameters():
+            param.requires_grad = <span class=<span class="string">"keyword"</span>>False</span>
+        
+        <span class="comment"># Unfreeze the classification head</span>
+        <span class=<span class="string">"keyword"</span>>for</span> param <span class=<span class="string">"keyword"</span>>in</span> model.head.parameters():
+            param.requires_grad = <span class=<span class="string">"keyword"</span>>True</span>
+            
+        <span class="comment"># Unfreeze the last n_blocks of the encoder</span>
+        <span class=<span class="string">"keyword"</span>>if</span> n_blocks &gt; <span class="number">0</span>:
+            layers = <span class="builtin">list</span>(model.blocks)
+            <span class=<span class="string">"keyword"</span>>for</span> layer <span class=<span class="string">"keyword"</span>>in</span> layers[-n_blocks:]:
+                <span class=<span class="string">"keyword"</span>>for</span> param <span class=<span class="string">"keyword"</span>>in</span> layer.parameters():
+                    param.requires_grad = <span class=<span class="string">"keyword"</span>>True</span>
+        
+        <span class="builtin">print</span>(f&quot;\n[STAGE <span class="number">2</span>: UNFREEZING LAST {n_blocks} BLOCKS + HEAD]&quot;)
+
+    trainable = <span class="builtin">sum</span>(p.numel() <span class=<span class="string">"keyword"</span>>for</span> p <span class=<span class="string">"keyword"</span>>in</span> model.parameters() <span class=<span class="string">"keyword"</span>>if</span> p.requires_grad)
+    <span class="builtin">print</span>(f&quot;• Trainable parameters now: {trainable:,}&quot;)
+    <span class=<span class="string">"keyword"</span>>if</span> n_blocks &gt;= <span class="number">12</span>:
+        <span class="builtin">print</span>(&quot;• Full fine-tuning enabled&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 19: TWO-STAGE FINE-TUNING
+================================================================================
+
+[STAGE 1: FREEZING BACKBONE]
+• Trainable parameters after freezing: 3,850
+• Only classification head is trainable
+
+Optimizer reconfigured for Stage 1
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 17: Run Training -->
+			<div class="notebook-cell" data-cell="17" data-step="17">
+				<div class="cell-header">
+					<span class="cell-label">Step 17: Run Training</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">20</span>: CREATING OUTPUT DIRECTORY&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+OUTPUT_DIR = Path(&quot;vit_cifar10_experiment&quot;)
+OUTPUT_DIR.mkdir(exist_ok=<span class=<span class="string">"keyword"</span>>True</span>)
+
+<span class="builtin">print</span>(f&quot;• Output directory created at: {OUTPUT_DIR.resolve()}&quot;)
+
+
+<span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">21</span>: STARTING TRAINING&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+EPOCHS_STAGE1 = <span class="number">10</span>      <span class="comment"># head training</span>
+EPOCHS_STAGE2 = <span class="number">90</span>      <span class="comment"># full fine-tuning (upper bound)</span>
+
+early_stopper = EarlyStopping(patience=<span class="number">8</span>)
+
+history = {
+    &quot;train_loss&quot;: [],
+    &quot;train_acc&quot;: [],
+    &quot;val_loss&quot;: [],
+    &quot;val_acc&quot;: []
+}
+
+
+<span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">60</span>)
+<span class="builtin">print</span>(&quot;STAGE <span class="number">1</span> TRAINING: CLASSIFIER HEAD ONLY&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">60</span>)
+
+<span class=<span class="string">"keyword"</span>>for</span> epoch <span class=<span class="string">"keyword"</span>>in</span> <span class="builtin">range</span>(<span class="number">1</span>, EPOCHS_STAGE1 + <span class="number">1</span>):
+    train_loss, train_acc = train_one_epoch(
+        model, train_loader, optimizer, criterion, DEVICE, epoch
+    )
+
+    val_loss, val_acc, _, _ = evaluate(
+        model, val_loader, criterion, DEVICE, split_name=&quot;Validation&quot;
+    )
+
+    history[&quot;train_loss&quot;].append(train_loss)
+    history[&quot;train_acc&quot;].append(train_acc)
+    history[&quot;val_loss&quot;].append(val_loss)
+    history[&quot;val_acc&quot;].append(val_acc)
+
+
+unfreeze_model(model, NUM_BLOCKS_TO_UNFREEZE)
+
+optimizer = optim.AdamW(
+    model.parameters(),
+    lr=LEARNING_RATE / <span class="number">10</span>,   <span class="comment"># smaller LR <span class=<span class="string">"keyword"</span>>for</span> fine-tuning</span>
+    weight_decay=WEIGHT_DECAY
+)
+
+scheduler = optim.lr_scheduler.CosineAnnealingLR(
+    optimizer, T_max=EPOCHS_STAGE2
+)
+
+<span class="builtin">print</span>(&quot; Optimizer <span class=<span class="string">"keyword"</span>>and</span> scheduler reconfigured <span class=<span class="string">"keyword"</span>>for</span> Stage <span class="number">2</span>&quot;)
+
+
+<span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">60</span>)
+<span class="builtin">print</span>(&quot;STAGE <span class="number">2</span> TRAINING: FULL MODEL FINE-TUNING&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">60</span>)
+
+<span class=<span class="string">"keyword"</span>>for</span> epoch <span class=<span class="string">"keyword"</span>>in</span> <span class="builtin">range</span>(<span class="number">1</span>, EPOCHS_STAGE2 + <span class="number">1</span>):
+    train_loss, train_acc = train_one_epoch(
+        model, train_loader, optimizer, criterion, DEVICE, epoch
+    )    
+
+    val_loss, val_acc, _, _ = evaluate(
+        model, val_loader, criterion, DEVICE, split_name=&quot;Validation&quot;
+    )
+
+    scheduler.step()
+
+    history[&quot;train_loss&quot;].append(train_loss)
+    history[&quot;train_acc&quot;].append(train_acc)
+    history[&quot;val_loss&quot;].append(val_loss)
+    history[&quot;val_acc&quot;].append(val_acc)
+
+    <span class=<span class="string">"keyword"</span>>if</span> early_stopper.step(val_acc):
+        <span class="builtin">print</span>(f&quot;\nTraining stopped early at epoch {epoch}&quot;)
+        break
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 20: CREATING OUTPUT DIRECTORY
+================================================================================
+• Output directory created at: /home/onkar/.gemini/antigravity/scratch/vit_cifar10_experiment/vit_cifar10_experiment
+
+
+================================================================================
+STEP 21: STARTING TRAINING
+================================================================================
+
+[EARLY STOPPING CONFIGURATION]
+• Patience   : 8 epochs
+• Min delta  : 0.0
+• Monitored  : Validation accuracy
+
+
+============================================================
+STAGE 1 TRAINING: CLASSIFIER HEAD ONLY
+============================================================
+
+------------------------------------------------------------
+Training Epoch 1
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 1 Training Loss: 2.2682
+Epoch 1 Training Accuracy: 25.63%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.5174
+Validation Accuracy : 55.62%
+
+------------------------------------------------------------
+Training Epoch 2
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 2 Training Loss: 1.8594
+Epoch 2 Training Accuracy: 41.58%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.2533
+Validation Accuracy : 67.54%
+
+------------------------------------------------------------
+Training Epoch 3
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 3 Training Loss: 1.7678
+Epoch 3 Training Accuracy: 46.08%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.1710
+Validation Accuracy : 72.02%
+
+------------------------------------------------------------
+Training Epoch 4
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 4 Training Loss: 1.7490
+Epoch 4 Training Accuracy: 47.31%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.1260
+Validation Accuracy : 73.98%
+
+------------------------------------------------------------
+Training Epoch 5
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 5 Training Loss: 1.7498
+Epoch 5 Training Accuracy: 47.25%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.1148
+Validation Accuracy : 74.80%
+
+------------------------------------------------------------
+Training Epoch 6
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 6 Training Loss: 1.7451
+Epoch 6 Training Accuracy: 47.29%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.1045
+Validation Accuracy : 75.38%
+
+------------------------------------------------------------
+Training Epoch 7
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 7 Training Loss: 1.7098
+Epoch 7 Training Accuracy: 49.13%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0815
+Validation Accuracy : 76.48%
+
+------------------------------------------------------------
+Training Epoch 8
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 8 Training Loss: 1.7097
+Epoch 8 Training Accuracy: 49.10%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0818
+Validation Accuracy : 76.66%
+
+------------------------------------------------------------
+Training Epoch 9
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 9 Training Loss: 1.6966
+Epoch 9 Training Accuracy: 49.64%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0686
+Validation Accuracy : 77.56%
+
+------------------------------------------------------------
+Training Epoch 10
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 10 Training Loss: 1.7055
+Epoch 10 Training Accuracy: 49.35%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0750
+Validation Accuracy : 76.44%
+
+
+[STAGE 2: UNFREEZING LAST 0 BLOCKS + HEAD]
+• Trainable parameters now: 3,850
+ Optimizer and scheduler reconfigured for Stage 2
+
+
+============================================================
+STAGE 2 TRAINING: FULL MODEL FINE-TUNING
+============================================================
+
+------------------------------------------------------------
+Training Epoch 1
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 1 Training Loss: 1.7192
+Epoch 1 Training Accuracy: 48.42%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0675
+Validation Accuracy : 77.12%
+✔ Validation accuracy improved: 0.00% → 77.12%
+
+------------------------------------------------------------
+Training Epoch 2
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 2 Training Loss: 1.7261
+Epoch 2 Training Accuracy: 48.21%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0696
+Validation Accuracy : 77.10%
+✖ No improvement. Counter: 1/8
+
+------------------------------------------------------------
+Training Epoch 3
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 3 Training Loss: 1.6873
+Epoch 3 Training Accuracy: 50.70%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0665
+Validation Accuracy : 77.38%
+✔ Validation accuracy improved: 77.12% → 77.38%
+
+------------------------------------------------------------
+Training Epoch 4
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 4 Training Loss: 1.7140
+Epoch 4 Training Accuracy: 48.95%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0675
+Validation Accuracy : 77.24%
+✖ No improvement. Counter: 1/8
+
+------------------------------------------------------------
+Training Epoch 5
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 5 Training Loss: 1.7126
+Epoch 5 Training Accuracy: 49.11%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0684
+Validation Accuracy : 77.26%
+✖ No improvement. Counter: 2/8
+
+------------------------------------------------------------
+Training Epoch 6
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 6 Training Loss: 1.7418
+Epoch 6 Training Accuracy: 47.15%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0681
+Validation Accuracy : 77.38%
+✖ No improvement. Counter: 3/8
+
+------------------------------------------------------------
+Training Epoch 7
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 7 Training Loss: 1.6845
+Epoch 7 Training Accuracy: 50.64%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0682
+Validation Accuracy : 77.30%
+✖ No improvement. Counter: 4/8
+
+------------------------------------------------------------
+Training Epoch 8
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 8 Training Loss: 1.6657
+Epoch 8 Training Accuracy: 51.87%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0639
+Validation Accuracy : 77.50%
+✔ Validation accuracy improved: 77.38% → 77.50%
+
+------------------------------------------------------------
+Training Epoch 9
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 9 Training Loss: 1.6918
+Epoch 9 Training Accuracy: 49.98%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0652
+Validation Accuracy : 77.64%
+✔ Validation accuracy improved: 77.50% → 77.64%
+
+------------------------------------------------------------
+Training Epoch 10
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 10 Training Loss: 1.6951
+Epoch 10 Training Accuracy: 50.01%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0648
+Validation Accuracy : 77.64%
+✖ No improvement. Counter: 1/8
+
+------------------------------------------------------------
+Training Epoch 11
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 11 Training Loss: 1.6838
+Epoch 11 Training Accuracy: 50.07%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0678
+Validation Accuracy : 77.64%
+✖ No improvement. Counter: 2/8
+
+------------------------------------------------------------
+Training Epoch 12
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 12 Training Loss: 1.6911
+Epoch 12 Training Accuracy: 50.28%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0653
+Validation Accuracy : 77.86%
+✔ Validation accuracy improved: 77.64% → 77.86%
+
+------------------------------------------------------------
+Training Epoch 13
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 13 Training Loss: 1.6806
+Epoch 13 Training Accuracy: 50.88%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0635
+Validation Accuracy : 77.80%
+✖ No improvement. Counter: 1/8
+
+------------------------------------------------------------
+Training Epoch 14
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 14 Training Loss: 1.6875
+Epoch 14 Training Accuracy: 50.43%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0621
+Validation Accuracy : 77.88%
+✔ Validation accuracy improved: 77.86% → 77.88%
+
+------------------------------------------------------------
+Training Epoch 15
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 15 Training Loss: 1.6596
+Epoch 15 Training Accuracy: 51.76%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0652
+Validation Accuracy : 77.70%
+✖ No improvement. Counter: 1/8
+
+------------------------------------------------------------
+Training Epoch 16
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 16 Training Loss: 1.6755
+Epoch 16 Training Accuracy: 50.95%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0627
+Validation Accuracy : 77.72%
+✖ No improvement. Counter: 2/8
+
+------------------------------------------------------------
+Training Epoch 17
+------------------------------------------------------------
+
+First batch augmentation used: MixUp
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 17 Training Loss: 1.6883
+Epoch 17 Training Accuracy: 50.24%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0658
+Validation Accuracy : 77.54%
+✖ No improvement. Counter: 3/8
+
+------------------------------------------------------------
+Training Epoch 18
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 18 Training Loss: 1.7022
+Epoch 18 Training Accuracy: 49.87%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0633
+Validation Accuracy : 77.50%
+✖ No improvement. Counter: 4/8
+
+------------------------------------------------------------
+Training Epoch 19
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 19 Training Loss: 1.7003
+Epoch 19 Training Accuracy: 49.90%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0629
+Validation Accuracy : 77.62%
+✖ No improvement. Counter: 5/8
+
+------------------------------------------------------------
+Training Epoch 20
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 20 Training Loss: 1.6833
+Epoch 20 Training Accuracy: 50.78%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0624
+Validation Accuracy : 77.76%
+✖ No improvement. Counter: 6/8
+
+------------------------------------------------------------
+Training Epoch 21
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 21 Training Loss: 1.7089
+Epoch 21 Training Accuracy: 49.51%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0627
+Validation Accuracy : 77.74%
+✖ No improvement. Counter: 7/8
+
+------------------------------------------------------------
+Training Epoch 22
+------------------------------------------------------------
+
+First batch augmentation used: CutMix
+• Batch image shape: torch.Size([128, 3, 32, 32])
+• Batch label shape: torch.Size([128])
+Expected image shape: (batch_size, 3, 32, 32)
+
+Epoch 22 Training Loss: 1.6452
+Epoch 22 Training Accuracy: 52.33%
+
+Evaluating on Validation set...
+
+Validation Loss     : 1.0605
+Validation Accuracy : 77.86%
+✖ No improvement. Counter: 8/8
+Early stopping triggered
+
+Training stopped early at epoch 22
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 18: Plot Training Curves -->
+			<div class="notebook-cell" data-cell="18" data-step="18">
+				<div class="cell-header">
+					<span class="cell-label">Step 18: Plot Training Curves</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">22</span>: PLOTTING TRAINING CURVES&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+epochs = <span class="builtin">range</span>(<span class="number">1</span>, <span class="builtin">len</span>(history[&quot;train_loss&quot;]) + <span class="number">1</span>)
+
+plt.figure(figsize=(<span class="number">14</span>, <span class="number">5</span>))
+
+<span class="comment"># Loss</span>
+plt.subplot(<span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>)
+plt.plot(epochs, history[&quot;train_loss&quot;], label=&quot;Train Loss&quot;)
+plt.plot(epochs, history[&quot;val_loss&quot;], label=&quot;Val Loss&quot;)
+plt.xlabel(&quot;Epoch&quot;)
+plt.ylabel(&quot;Loss&quot;)
+plt.title(&quot;Training vs Validation Loss&quot;)
+plt.legend()
+
+<span class="comment"># Accuracy</span>
+plt.subplot(<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>)
+plt.plot(epochs, history[&quot;train_acc&quot;], label=&quot;Train Accuracy&quot;)
+plt.plot(epochs, history[&quot;val_acc&quot;], label=&quot;Val Accuracy&quot;)
+plt.xlabel(&quot;Epoch&quot;)
+plt.ylabel(&quot;Accuracy (%)&quot;)
+plt.title(&quot;Training vs Validation Accuracy&quot;)
+plt.legend()
+
+plt.show()
+
+<span class="builtin">print</span>(&quot;\nExpected behavior:&quot;)
+<span class="builtin">print</span>(&quot;• Training loss ↓ steadily&quot;)
+<span class="builtin">print</span>(&quot;• Validation loss ↓ then stabilizes&quot;)
+<span class="builtin">print</span>(&quot;• Early stopping prevents divergence&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 22: PLOTTING TRAINING CURVES
+================================================================================
+
+&lt;Figure size 1400x500 with 2 Axes&gt;
+
+Expected behavior:
+• Training loss ↓ steadily
+• Validation loss ↓ then stabilizes
+• Early stopping prevents divergence
+</pre>
+						<div class="output-image"><img src="images/vit_variant_01_vit_small_patch8_224_unfreeze0_cell77_output0.png" alt="Output visualization" style="max-width: 100%; height: auto;"></div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 19: Sample Predictions -->
+			<div class="notebook-cell" data-cell="19" data-step="19">
+				<div class="cell-header">
+					<span class="cell-label">Step 19: Sample Predictions</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">23</span>: VISUALIZING SAMPLE PREDICTIONS&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+model.eval()
+images, labels = next(iter(subset_test_loader))
+images, labels = images.to(DEVICE), labels.to(DEVICE)
+
+<span class=<span class="string">"keyword"</span>>with</span> torch.no_grad():
+    outputs = model(images)
+    _, preds = outputs.<span class="builtin">max</span>(<span class="number">1</span>)
+
+plt.figure(figsize=(<span class="number">15</span>, <span class="number">4</span>))
+<span class=<span class="string">"keyword"</span>>for</span> i <span class=<span class="string">"keyword"</span>>in</span> <span class="builtin">range</span>(<span class="number">8</span>):
+    img = images[i].cpu()
+    img = img * torch.tensor(CIFAR_STD).view(<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>) + torch.tensor(CIFAR_MEAN).view(<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>)
+    img = img.clamp(<span class="number">0</span>,<span class="number">1</span>)
+
+    plt.subplot(<span class="number">1</span>, <span class="number">8</span>, i + <span class="number">1</span>)
+    plt.imshow(img.permute(<span class="number">1</span>,<span class="number">2</span>,<span class="number">0</span>))
+    plt.title(f&quot;P: {CLASSES[preds[i]]}\nT: {CLASSES[labels[i]]}&quot;)
+    plt.axis(&quot;off&quot;)
+
+plt.show()
+
+<span class="builtin">print</span>(&quot;\nInterpretation:&quot;)
+<span class="builtin">print</span>(&quot;• Correct predictions → confidence <span class=<span class="string">"keyword"</span>>in</span> learning&quot;)
+<span class="builtin">print</span>(&quot;• Wrong predictions → visually ambiguous cases&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 23: VISUALIZING SAMPLE PREDICTIONS
+================================================================================
+
+&lt;Figure size 1500x400 with 8 Axes&gt;
+
+Interpretation:
+• Correct predictions → confidence in learning
+• Wrong predictions → visually ambiguous cases
+</pre>
+						<div class="output-image"><img src="images/vit_variant_01_vit_small_patch8_224_unfreeze0_cell79_output0.png" alt="Output visualization" style="max-width: 100%; height: auto;"></div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 20: Per-Class Accuracy -->
+			<div class="notebook-cell" data-cell="20" data-step="20">
+				<div class="cell-header">
+					<span class="cell-label">Step 20: Per-Class Accuracy</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">24</span>: PER-CLASS ACCURACY CALCULATION&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> per_class_accuracy(labels, preds, num_classes):
+    correct = np.zeros(num_classes)
+    total = np.zeros(num_classes)
+
+    <span class=<span class="string">"keyword"</span>>for</span> l, p <span class=<span class="string">"keyword"</span>>in</span> <span class="builtin">zip</span>(labels, preds):
+        total[l] += <span class="number">1</span>
+        <span class=<span class="string">"keyword"</span>>if</span> l == p:
+            correct[l] += <span class="number">1</span>
+
+    <span class=<span class="string">"keyword"</span>>return</span> <span class="number">100</span> * correct / total
+
+
+_, _, subset_labels, subset_preds = evaluate(
+    model, subset_test_loader, criterion, DEVICE, split_name=&quot;Subset Test&quot;
+)
+
+_, _, full_labels, full_preds = evaluate(
+    model, full_test_loader, criterion, DEVICE, split_name=&quot;Full Test&quot;
+)
+
+subset_acc = per_class_accuracy(subset_labels, subset_preds, NUM_CLASSES)
+full_acc = per_class_accuracy(full_labels, full_preds, NUM_CLASSES)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 24: PER-CLASS ACCURACY CALCULATION
+================================================================================
+
+
+Evaluating on Subset Test set...
+
+Subset Test Loss     : 1.0662
+Subset Test Accuracy : 77.20%
+
+Evaluating on Full Test set...
+
+Full Test Loss     : 1.0760
+Full Test Accuracy : 77.34%
+</pre>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 21: Accuracy Visualization -->
+			<div class="notebook-cell" data-cell="21" data-step="21">
+				<div class="cell-header">
+					<span class="cell-label">Step 21: Accuracy Visualization</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">25</span>: PER-CLASS ACCURACY VISUALIZATION&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+x = np.arange(NUM_CLASSES)
+
+plt.figure(figsize=(<span class="number">14</span>, <span class="number">5</span>))
+plt.bar(x - <span class="number">0.2</span>, subset_acc, width=<span class="number">0.4</span>, label=&quot;Subset Test&quot;)
+plt.bar(x + <span class="number">0.2</span>, full_acc, width=<span class="number">0.4</span>, label=&quot;Full Test&quot;)
+
+plt.xticks(x, CLASSES, rotation=<span class="number">45</span>)
+plt.ylabel(&quot;Accuracy (%)&quot;)
+plt.title(&quot;Per-Class Accuracy Comparison&quot;)
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+<span class="builtin">print</span>(&quot;\nInterpretation:&quot;)
+<span class="builtin">print</span>(&quot;• Subset test <span class=<span class="string">"keyword"</span>>is</span> usually slightly higher&quot;)
+<span class="builtin">print</span>(&quot;• Full test reflects real generalization&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 25: PER-CLASS ACCURACY VISUALIZATION
+================================================================================
+
+&lt;Figure size 1400x500 with 1 Axes&gt;
+
+Interpretation:
+• Subset test is usually slightly higher
+• Full test reflects real generalization
+</pre>
+						<div class="output-image"><img src="images/vit_variant_01_vit_small_patch8_224_unfreeze0_cell83_output0.png" alt="Output visualization" style="max-width: 100%; height: auto;"></div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 22: Confusion Matrix -->
+			<div class="notebook-cell" data-cell="22" data-step="22">
+				<div class="cell-header">
+					<span class="cell-label">Step 22: Confusion Matrix</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">26</span>: CONFUSION MATRICES&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+<span <span class=<span class="string">"keyword"</span>>class</span>=<span class="string">"keyword"</span>>def</span> plot_confusion_matrix(labels, preds, title):
+    cm = confusion_matrix(labels, preds)
+    plt.figure(figsize=(<span class="number">8</span>, <span class="number">6</span>))
+    sns.heatmap(cm, annot=<span class=<span class="string">"keyword"</span>>False</span>, cmap=&quot;Blues&quot;,
+                xticklabels=CLASSES, yticklabels=CLASSES)
+    plt.xlabel(&quot;Predicted&quot;)
+    plt.ylabel(&quot;<span class=<span class="string">"keyword"</span>>True</span>&quot;)
+    plt.title(title)
+    plt.show()
+
+plot_confusion_matrix(subset_labels, subset_preds, &quot;Confusion Matrix – Subset Test&quot;)
+plot_confusion_matrix(full_labels, full_preds, &quot;Confusion Matrix – Full Test&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 26: CONFUSION MATRICES
+================================================================================
+
+&lt;Figure size 800x600 with 2 Axes&gt;
+&lt;Figure size 800x600 with 2 Axes&gt;</pre>
+						<div class="output-image"><img src="images/vit_variant_01_vit_small_patch8_224_unfreeze0_cell84_output0.png" alt="Output visualization" style="max-width: 100%; height: auto;"></div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Cell 23: Final Summary -->
+			<div class="notebook-cell" data-cell="23" data-step="23">
+				<div class="cell-header">
+					<span class="cell-label">Step 23: Final Summary</span>
+					<button class="run-btn">
+						<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M8 5v14l11-7z" />
+						</svg>
+						Run
+					</button>
+				</div>
+				<div class="cell-code">
+					<pre><code class="language-python"><span class="builtin">print</span>(&quot;\n&quot; + &quot;=&quot;*<span class="number">80</span>)
+<span class="builtin">print</span>(&quot;STEP <span class="number">27</span>: FINAL SUMMARY&quot;)
+<span class="builtin">print</span>(&quot;=&quot;*<span class="number">80</span>)
+
+<span class="builtin">print</span>(&quot;MODEL              : ViT-Small (Patch <span class="number">8</span>), ImageNet pretrained&quot;)
+<span class="builtin">print</span>(&quot;DATASET            : CIFAR-<span class="number">10</span> (<span class=<span class="string">"keyword"</span>>class</span>-balanced subset)&quot;)
+<span class="builtin">print</span>(&quot;TRAIN SAMPLES      : <span class="number">20</span>,<span class="number">000</span>&quot;)
+<span class="builtin">print</span>(&quot;VALIDATION SAMPLES : <span class="number">5</span>,<span class="number">000</span>&quot;)
+<span class="builtin">print</span>(&quot;TEST (SUBSET)      : <span class="number">5</span>,<span class="number">000</span>&quot;)
+<span class="builtin">print</span>(&quot;TEST (FULL)        : <span class="number">10</span>,<span class="number">000</span>&quot;)
+<span class="builtin">print</span>(&quot;\nKEY TECHNIQUES USED:&quot;)
+<span class="builtin">print</span>(&quot;• Transfer learning (ImageNet → CIFAR-<span class="number">10</span>)&quot;)
+<span class="builtin">print</span>(&quot;• Strong augmentation (MixUp + CutMix)&quot;)
+<span class="builtin">print</span>(&quot;• Two-stage fine-tuning&quot;)
+<span class="builtin">print</span>(&quot;• Early stopping&quot;)
+<span class="builtin">print</span>(&quot;• Cosine learning rate schedule&quot;)
+
+<span class="builtin">print</span>(&quot;\nWHAT STUDENTS SHOULD REMEMBER:&quot;)
+<span class="builtin">print</span>(&quot;• ViTs need pretraining&quot;)
+<span class="builtin">print</span>(&quot;• Patch size matters&quot;)
+<span class="builtin">print</span>(&quot;• Validation controls training&quot;)
+<span class="builtin">print</span>(&quot;• Attention replaces convolution&quot;)
+
+<span class="builtin">print</span>(&quot;\nEXPERIMENT COMPLETE&quot;)
+</code></pre>
+				</div>
+				<div class="cell-output hidden">
+					<div class="output-label">Output:</div>
+					<div class="output-content text-output">
+						<pre>
+================================================================================
+STEP 27: FINAL SUMMARY
+================================================================================
+MODEL              : ViT-Small (Patch 8), ImageNet pretrained
+DATASET            : CIFAR-10 (class-balanced subset)
+TRAIN SAMPLES      : 20,000
+VALIDATION SAMPLES : 5,000
+TEST (SUBSET)      : 5,000
+TEST (FULL)        : 10,000
+
+KEY TECHNIQUES USED:
+• Transfer learning (ImageNet → CIFAR-10)
+• Strong augmentation (MixUp + CutMix)
+• Two-stage fine-tuning
+• Early stopping
+• Cosine learning rate schedule
+
+WHAT STUDENTS SHOULD REMEMBER:
+• ViTs need pretraining
+• Patch size matters
+• Validation controls training
+• Attention replaces convolution
+
+EXPERIMENT COMPLETE
+</pre>
+					</div>
+				</div>
+			</div>

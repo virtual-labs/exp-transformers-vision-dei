@@ -1,0 +1,162 @@
+[
+  {
+    "question": "1. Why are pretrained weights commonly used when training Vision Transformers on small datasets?",
+    "answers": {
+      "a": "To reduce the number of classes",
+      "b": "To improve convergence and performance",
+      "c": "To eliminate the need for fine-tuning",
+      "d": "To remove positional embeddings"
+    },
+    "explanations": {
+      "a": "Incorrect because pretraining does not change class count.",
+      "b": "Correct because ViTs need large datasets when trained from scratch.",
+      "c": "Incorrect because fine-tuning is still required.",
+      "d": "Incorrect because positional embeddings remain essential."
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "2. What information do self-attention maps provide in Vision Transformers?",
+    "answers": {
+      "a": "Pixel intensity values",
+      "b": "Class labels",
+      "c": "Training loss values",
+      "d": "Importance of image patches during prediction"
+    },
+    "explanations": {
+      "a": "Incorrect because attention maps show relationships, not raw values.",
+      "b": "Incorrect because labels are outputs, not attention.",
+      "c": "Incorrect because loss is not visualized in attention maps.",
+      "d": "Correct because attention indicates which patches influence decisions."
+    },
+    "correctAnswer": "d"
+  },
+  {
+    "question": "3. Compared to CNNs, Vision Transformers primarily differ by using:",
+    "answers": {
+      "a": "Larger kernels",
+      "b": "Pooling layers",
+      "c": "Self-attention instead of convolution",
+      "d": "Fewer parameters"
+    },
+    "explanations": {
+      "a": "Incorrect because ViTs do not use kernels.",
+      "b": "Incorrect because pooling is not central to ViTs.",
+      "c": "Correct because attention replaces convolution.",
+      "d": "Incorrect because ViTs often have more parameters."
+    },
+    "correctAnswer": "c"
+  },
+  {
+    "question": "4. Why is patch size an important hyperparameter in Vision Transformers?",
+    "answers": {
+      "a": "It controls the learning rate",
+      "b": "It determines the number of tokens processed",
+      "c": "It defines the loss function",
+      "d": "It replaces positional embeddings"
+    },
+    "explanations": {
+      "a": "Incorrect because the learning rate is independent.",
+      "b": "Correct because smaller patches create more tokens.",
+      "c": "Incorrect because loss is defined separately.",
+      "d": "Incorrect because embeddings are still required."
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "5. What is a key advantage of visualizing attention maps in ViTs?",
+    "answers": {
+      "a": "Faster training",
+      "b": "Improved accuracy",
+      "c": "Better interpretability of model decisions",
+      "d": "Reduced model size"
+    },
+    "explanations": {
+      "a": "Incorrect because visualization does not affect training speed.",
+      "b": "Incorrect because visualization does not change model weights.",
+      "c": "Correct because attention maps reveal where the model focuses.",
+      "d": "Incorrect because visualization does not change architecture."
+    },
+    "correctAnswer": "c"
+  },
+  {
+    "question": "6. Why are early layers of a pretrained Vision Transformer often frozen during fine-tuning?",
+    "answers": {
+      "a": "To preserve learned low-level visual representations",
+      "b": "To increase the model size",
+      "c": "To remove positional embeddings",
+      "d": "To reduce the number of output classes"
+    },
+    "explanations": {
+      "a": "Correct because early layers capture general visual features useful across tasks.",
+      "b": "Incorrect because freezing layers does not change the number of parameters.",
+      "c": "Incorrect because positional embeddings remain part of the model.",
+      "d": "Incorrect because class count is controlled by the classification head."
+    },
+    "correctAnswer": "a"
+  },
+  {
+    "question": "7. What is the effect of reducing patch size in a Vision Transformer?",
+    "answers": {
+      "a": "It decreases the number of tokens processed",
+      "b": "It increases the number of patch embeddings",
+      "c": "It removes the need for positional encoding",
+      "d": "It disables self-attention"
+    },
+    "explanations": {
+      "a": "Incorrect because smaller patches create more tokens.",
+      "b": "Correct because more patches are created from the same image.",
+      "c": "Incorrect because positional information is still required.",
+      "d": "Incorrect because self-attention operates regardless of patch size."
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "8. During evaluation, why is gradient computation disabled in the ViT code?",
+    "answers": {
+      "a": "To reduce memory usage and speed up inference",
+      "b": "To improve model accuracy",
+      "c": "To freeze the optimizer",
+      "d": "To apply data augmentation"
+    },
+    "explanations": {
+      "a": "Correct because gradients are not required during evaluation.",
+      "b": "Incorrect because gradients do not affect inference accuracy.",
+      "c": "Incorrect because the optimizer is not used during evaluation.",
+      "d": "Incorrect because augmentation is applied only during training."
+    },
+    "correctAnswer": "a"
+  },
+  {
+    "question": "9. What insight is gained by visualizing self-attention maps in a Vision Transformer?",
+    "answers": {
+      "a": "The exact numerical value of loss",
+      "b": "The learning rate used during training",
+      "c": "Which image patches influence the model's decision",
+      "d": "The number of parameters in the model"
+    },
+    "explanations": {
+      "a": "Incorrect because loss values are scalar metrics.",
+      "b": "Incorrect because learning rate is a training parameter.",
+      "c": "Correct because attention maps highlight important patches.",
+      "d": "Incorrect because parameter count is independent of attention."
+    },
+    "correctAnswer": "c"
+  },
+  {
+    "question": "10. Compared to CNN feature maps, attention maps in ViTs primarily show:",
+    "answers": {
+      "a": "Local edge activations",
+      "b": "Pixel-level gradients",
+      "c": "Pooling regions",
+      "d": "Global relationships between image patches"
+    },
+    "explanations": {
+      "a": "Incorrect because attention maps capture global relationships.",
+      "b": "Incorrect because attention maps are not gradients.",
+      "c": "Incorrect because pooling is not used in ViTs.",
+      "d": "Correct because self-attention connects all patches."
+    },
+    "correctAnswer": "d"
+  }
+]
