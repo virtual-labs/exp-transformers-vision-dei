@@ -1,39 +1,162 @@
-{
-  "version": 2.0,
-  "questions": [
-    {
-      "question": "This is a Sample Question 1?",
-      "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
-      },
-      "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
-      },
-      "correctAnswer": "a",
-      "difficulty": "beginner"
+[
+  {
+    "question": "1. What limitation of CNNs primarily motivated the development of Vision Transformers?",
+    "answers": {
+      "a": "CNNs cannot process color images.",
+      "b": "CNNs are limited to local receptive fields and cannot directly model long-range spatial dependencies.",
+      "c": "CNNs do not use learnable parameters.",
+      "d": "CNNs require positional encoding."
     },
-    {
-      "question": "This is a Sample Question 2?",
-      "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
-      },
-      "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
-      },
-      "correctAnswer": "c",
-      "difficulty": "beginner"
-    }
-  ]
-}
+    "explanations": {
+      "a": "Incorrect because CNNs handle color images routinely.",
+      "b": "Correct because ViTs were developed to overcome this limitation by using global self-attention.",
+      "c": "Incorrect because CNNs are trained with learnable weights.",
+      "d": "Incorrect because positional encoding is a transformer concept, not a CNN requirement."
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "2. How does a Vision Transformer process an image?",
+    "answers": {
+      "a": "By directly applying convolutions",
+      "b": "By flattening the entire image into one vector",
+      "c": "By splitting the image into fixed-size patches",
+      "d": "By applying pooling operations"
+    },
+    "explanations": {
+      "a": "Incorrect because ViTs do not use convolution layers for feature extraction.",
+      "b": "Incorrect because images are divided into patches.",
+      "c": "Correct because ViTs operate on patch embeddings.",
+      "d": "Incorrect because pooling is not a core ViT operation."
+    },
+    "correctAnswer": "c"
+  },
+  {
+    "question": "3. Why are positional embeddings required in Vision Transformers?",
+    "answers": {
+      "a": "To reduce model size",
+      "b": "To encode spatial information of patches",
+      "c": "To normalize patch values",
+      "d": "To perform classification"
+    },
+    "explanations": {
+      "a": "Incorrect because embeddings do not reduce parameters.",
+      "b": "Correct because transformers lack inherent spatial awareness.",
+      "c": "Incorrect because normalization is separate.",
+      "d": "Incorrect because classification is done by the CLS token."
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "4. What role does the CLS token play in a Vision Transformer?",
+    "answers": {
+      "a": "It stores the final image representation for classification",
+      "b": "It represents the background of the image",
+      "c": "It replaces patch embeddings",
+      "d": "It performs pooling"
+    },
+    "explanations": {
+      "a": "Correct because it is used for prediction.",
+      "b": "Incorrect because it aggregates global information.",
+      "c": "Incorrect because patches are still processed.",
+      "d": "Incorrect because it is not a pooling operation."
+    },
+    "correctAnswer": "a"
+  },
+  {
+    "question": "5. Which operation allows ViTs to model long-range dependencies?",
+    "answers": {
+      "a": "Pooling",
+      "b": "Self-attention",
+      "c": "Dropout",
+      "d": "Normalization"
+    },
+    "explanations": {
+      "a": "Incorrect because pooling reduces spatial information.",
+      "b": "Correct because attention connects all patches globally.",
+      "c": "Incorrect because dropout is a regularization method.",
+      "d": "Incorrect because normalization stabilizes training."
+    },
+    "correctAnswer": "b"
+  },
+  {
+    "question": "6. In the attention equation Attention(Q,K,V) = softmax(QK^T / sqrt(d_k))V, What is the role of the softmax function?",
+    "answers": {
+      "a": "Increasing the dimensionality of vectors",
+      "b": "Removing unnecessary neurons during training",
+      "c": "Converting attention scores into probabilities",
+      "d": "Initializing model parameters"
+    },
+    "explanations": {
+      "a": "Incorrect because softmax does not increase dimensions.",
+      "b": "Incorrect because that is the role of dropout.",
+      "c": "Correct because softmax assigns normalized importance weights to different tokens.",
+      "d": "Incorrect because parameter initialization is done before training begins."
+    },
+    "correctAnswer": "c"
+  },
+  {
+    "question": "7. Why is the term sqrt(d_k) used in the denominator of the attention equation?",
+    "answers": {
+      "a": "To increase numerical instability",
+      "b": "To reduce the number of parameters",
+      "c": "To scale down large dot-product values",
+      "d": "To perform normalization"
+    },
+    "explanations": {
+      "a": "Incorrect because the purpose is to improve stability, not reduce it.",
+      "b": "Incorrect because scaling does not change parameter count.",
+      "c": "Correct because scaling prevents extremely large values before softmax.",
+      "d": "Incorrect because normalization is performed separately."
+    },
+    "correctAnswer": "c"
+  },
+  {
+    "question": "8. What does the Query-Key dot product QK^T represent in self-attention?",
+    "answers": {
+      "a": "The similarity between different patches",
+      "b": "The pixel intensity of image patches",
+      "c": "The classification score",
+      "d": "The loss value"
+    },
+    "explanations": {
+      "a": "Correct because dot products measure how related two patches are.",
+      "b": "Incorrect because attention operates on embeddings, not raw pixels.",
+      "c": "Incorrect because classification happens after the transformer encoder.",
+      "d": "Incorrect because loss is computed separately."
+    },
+    "correctAnswer": "a"
+  },
+  {
+    "question": "9. What is the purpose of using multiple attention heads in a Vision Transformer?",
+    "answers": {
+      "a": "To process images in grayscale only",
+      "b": "To reduce the total number of model parameters",
+      "c": "To ensure all heads learn the same attention pattern",
+      "d": "To allow the model to attend to different representation subspaces simultaneously"
+    },
+    "explanations": {
+      "a": "Incorrect because multi-head attention is not related to color channels.",
+      "b": "Incorrect because multiple heads increase computational capacity.",
+      "c": "Incorrect because each head learns independent attention patterns.",
+      "d": "Correct because each head projects Q, K, V into a different subspace, capturing diverse relationships across patches."
+    },
+    "correctAnswer": "d"
+  },
+  {
+    "question": "10. Which statement best describes self-attention in Vision Transformers?",
+    "answers": {
+      "a": "Each patch attends only to its neighboring patches",
+      "b": "Self-attention replaces the need for labels",
+      "c": "Attention is applied only in the final layer",
+      "d": "Each patch attends to all other patches in the image"
+    },
+    "explanations": {
+      "a": "Incorrect because self-attention considers all patches globally.",
+      "b": "Incorrect because supervision is still required.",
+      "c": "Incorrect because attention is applied in every transformer block.",
+      "d": "Correct because self-attention captures global relationships."
+    },
+    "correctAnswer": "d"
+  }
+]

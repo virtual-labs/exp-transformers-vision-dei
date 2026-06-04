@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Debug - ViT Variants</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+        }
+
+        .test {
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            overflow-x: auto;
+            max-height: 300px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ViT Variants Debug Page</h1>
+
+    <div id="test1" class="test">
+        <h2>Test 1: Load variants_data.js</h2>
+        <div id="test1-result">Loading...</div>
+    </div>
+
+    <div id="test2" class="test">
+        <h2>Test 2: Get variant data</h2>
+        <div id="test2-result">Loading...</div>
+    </div>
+
+    <div id="test3" class="test">
+        <h2>Test 3: Check cell outputs</h2>
+        <div id="test3-result">Loading...</div>
+    </div>
+
+    <div id="test4" class="test">
+        <h2>Test 4: Render a cell with output</h2>
+        <div id="test4-result">Loading...</div>
+        <div id="test4-render"></div>
+    </div>
+
+    <script src="./js/variants_data.js"></script>
+    <script>
+        // Test 1: Check if ALL_VARIANTS is defined
+        const test1 = document.getElementById('test1');
+        const test1Result = document.getElementById('test1-result');
+
+        if (typeof ALL_VARIANTS !== 'undefined') {
+            test1.className = 'test success';
+            const variantKeys = Object.keys(ALL_VARIANTS);
+            test1Result.innerHTML = `
+                <p>✓ ALL_VARIANTS loaded successfully</p>
+                <p>Number of variants: ${variantKeys.length}</p>
+                <p>Variant keys: ${variantKeys.join(', ')}</p>
+            `;
+        } else {
+            test1.className = 'test error';
+            test1Result.innerHTML = '<p>✗ ALL_VARIANTS is not defined</p>';
+        }
+
+        // Test 2: Get variant data
+        const test2 = document.getElementById('test2');
+        const test2Result = document.getElementById('test2-result');
+
+        const variant = getVariantData('small', '8', '0');
+        if (variant) {
+            test2.className = 'test success';
+            test2Result.innerHTML = `
+                <p>✓ Successfully retrieved variant: small_patch8_unfreeze0</p>
+                <p>Number of cells: ${variant.cells.length}</p>
+                <p>Model: ${variant.model}, Patch: ${variant.patch_size}, Unfreeze: ${variant.unfreeze_blocks}</p>
+            `;
+        } else {
+            test2.className = 'test error';
+            test2Result.innerHTML = '<p>✗ Failed to retrieve variant</p>';
+        }
+
+        // Test 3: Check outputs
+        const test3 = document.getElementById('test3');
+        const test3Result = document.getElementById('test3-result');
+
+        if (variant) {
+            const cellsWithTextOutput = variant.cells.filter(c => c.output_text && c.output_text.trim());
+            const cellsWithImages = variant.cells.filter(c => c.has_image && c.images && c.images.length > 0);
+
+            test3.className = 'test success';
+            test3Result.innerHTML = `
+                <p>✓ Output analysis complete</p>
+                <p>Cells with text output: ${cellsWithTextOutput.length}</p>
+                <p>Cells with images: ${cellsWithImages.length}</p>
+                <details>
+                    <summary>First 5 cells with text output</summary>
+                    <ul>
+                    ${cellsWithTextOutput.slice(0, 5).map((c, i) => `
+                        <li>Cell: ${c.title || 'Untitled'}<br>
+                        Output length: ${c.output_text.length} chars<br>
+                        Preview: ${c.output_text.substring(0, 100).replace(/</g, '&lt;')}...
+                        </li>
+                    `).join('')}
+                    </ul>
+                </details>
+                <details>
+                    <summary>First 3 cells with images</summary>
+                    <ul>
+                    ${cellsWithImages.slice(0, 3).map((c, i) => `
+                        <li>Cell: ${c.title || 'Untitled'}<br>
+                        Number of images: ${c.images.length}<br>
+                        Image src length: ${c.images[0].substring(0, 50)}...
+                        </li>
+                    `).join('')}
+                    </ul>
+                </details>
+            `;
+        } else {
+            test3.className = 'test error';
+            test3Result.innerHTML = '<p>✗ No variant data to analyze</p>';
+        }
+
+        // Test 4: Try rendering a cell
+        const test4 = document.getElementById('test4');
+        const test4Result = document.getElementById('test4-result');
+        const test4Render = document.getElementById('test4-render');
+
+        if (variant) {
+            // Find first cell with output
+            const cellWithOutput = variant.cells.find(c => c.output_text && c.output_text.trim());
+
+            if (cellWithOutput) {
+                test4.className = 'test success';
+                test4Result.innerHTML = `
+                    <p>✓ Found cell with output: ${cellWithOutput.title || 'Untitled'}</p>
+                    <p>Rendering below:</p>
+                `;
+
+                // Create output div
+                const outputDiv = document.createElement('div');
+                outputDiv.style.background = '#f9f9f9';
+                outputDiv.style.padding = '10px';
+                outputDiv.style.border = '1px solid #ddd';
+                outputDiv.style.marginTop = '10px';
+
+                const pre = document.createElement('pre');
+                pre.textContent = cellWithOutput.output_text;
+                pre.style.whiteSpace = 'pre-wrap';
+
+                outputDiv.appendChild(pre);
+                test4Render.appendChild(outputDiv);
+            } else {
+                test4.className = 'test error';
+                test4Result.innerHTML = '<p>✗ No cells with text output found</p>';
+            }
+
+            // Also try rendering a cell with image
+            const cellWithImage = variant.cells.find(c => c.has_image && c.images && c.images.length > 0);
+
+            if (cellWithImage) {
+                test4Result.innerHTML += `<p>✓ Found cell with image: ${cellWithImage.title || 'Untitled'}</p>`;
+
+                const imgDiv = document.createElement('div');
+                imgDiv.style.marginTop = '20px';
+                imgDiv.innerHTML = '<h3>Image Test:</h3>';
+
+                const img = document.createElement('img');
+                img.src = cellWithImage.images[0];
+                img.style.maxWidth = '400px';
+                img.style.border = '1px solid #ddd';
+                img.onload = function () {
+                    console.log('Image loaded successfully!');
+                    imgDiv.innerHTML += '<p style="color:green;">✓ Image loaded successfully</p>';
+                };
+                img.onerror = function () {
+                    console.error('Image failed to load');
+                    imgDiv.innerHTML += '<p style="color:red;">✗ Image failed to load</p>';
+                };
+
+                imgDiv.appendChild(img);
+                test4Render.appendChild(imgDiv);
+            }
+        }
+    </script>
+</body>
+
+</html>
