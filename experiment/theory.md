@@ -18,11 +18,11 @@ Image patching is the first step in the Vision Transformer pipeline. In this pro
 
 Each image patch is flattened into a one-dimensional vector and then passed through a linear projection layer to convert it into an embedding. These embedded patches form the input sequence for the Transformer encoder.
 
-Fig. 1 illustrates the patching process applied to an automobile image from the CIFAR-10 dataset. The original image is divided into smaller image regions, where each patch represents a localized visual component. These patches are later embedded and processed by the Transformer encoder to learn meaningful visual representations.
+Figure 1 illustrates the patching process applied to an automobile image from the CIFAR-10 dataset. The original image is divided into smaller image regions, where each patch represents a localized visual component. These patches are later embedded and processed by the Transformer encoder to learn meaningful visual representations.
 
-![Fig 1: Original automobile image and its corresponding patch-wise representation](images/image29.png)
+![Figure 1: Original automobile image and its corresponding patch-wise representation](images/image29.png)
 
-Fig. 1. Original automobile image and its corresponding patch-wise representation.
+Figure 1. Original automobile image and its corresponding patch-wise representation.
 
 **II. Patch Embedding**
 
@@ -100,11 +100,11 @@ $$\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$$
 
 Here, $W_i^Q$, $W_i^K$, and $W_i^V$ are learned projection matrices for the query, key, and value vectors of the $i$-th attention head. $W^O$ is the final output projection matrix that combines the outputs of all attention heads.
 
-As shown in Fig. 2, the input tokens are first projected into Query, Key, and Value vectors. These projections are then divided into multiple parallel attention heads. Each head independently applies scaled dot-product attention. The outputs from all heads are concatenated and passed through a final linear layer. This enables the model to learn richer and more diverse visual representations than a single attention head.
+As shown in Figure 2, the input tokens are first projected into Query, Key, and Value vectors. These projections are then divided into multiple parallel attention heads. Each head independently applies scaled dot-product attention. The outputs from all heads are concatenated and passed through a final linear layer. This enables the model to learn richer and more diverse visual representations than a single attention head.
 
-![Fig 2: Scaled dot-product attention and multi-head attention architecture](images/image22.png)
+![Figure 2: Scaled dot-product attention and multi-head attention architecture](images/image22.png)
 
-Fig. 2. Scaled dot-product attention and multi-head attention architecture. The left diagram shows scaled dot-product attention, while the right diagram shows multi-head attention, where multiple attention heads operate in parallel, followed by concatenation and a final linear projection. Source: Vaswani *et al.*, "Attention Is All You Need" (2017).
+Figure 2. Scaled dot-product attention and multi-head attention architecture. The left diagram shows scaled dot-product attention, while the right diagram shows multi-head attention, where multiple attention heads operate in parallel, followed by concatenation and a final linear projection. Source: Vaswani *et al.*, "Attention Is All You Need" (2017).
 
 **VI. Residual Connections and Layer Normalization**
 
